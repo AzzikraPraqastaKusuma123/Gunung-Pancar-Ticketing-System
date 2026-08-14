@@ -213,89 +213,90 @@
                                 'badge' => 'LEBIH HEMAT',
                                 'title' => 'Paket Group',
                                 'subtitle' => 'Berlibur bersama rombongan lebih seru dan hemat.',
-                                'price' => 200000,
+                                'desc' => isset($packagesDb['Paket Group']) && $packagesDb['Paket Group']->description ? $packagesDb['Paket Group']->description : null,
+                                'price' => isset($packagesDb['Paket Group']) && $packagesDb['Paket Group']->base_price > 0 ? $packagesDb['Paket Group']->base_price : 200000,
                                 'price_label' => '/ 5 orang',
                                 'features' => ['Tiket untuk 5 Orang', 'Akses Area Pinus', 'Lebih Praktis'],
                                 'input_name' => 'participants_group',
                                 'input_placeholder' => 'Nama Ketua Grup',
                                 'input_helper' => '1 tiket berlaku untuk 5 orang.',
                                 'unit_label' => 'grup',
-                                'image' => 'https://gunungpancar.co.id/wp-content/uploads/2026/07/32.jpg'
+                                'image' => isset($packagesDb['Paket Group']) && $packagesDb['Paket Group']->image ? asset('storage/' . $packagesDb['Paket Group']->image) : 'https://gunungpancar.co.id/wp-content/uploads/2026/07/32.jpg'
                             ],
                             [
                                 'model' => 'qty_pancar_trek',
                                 'badge' => 'SETENGAH HARI',
                                 'title' => 'Pancar Trek',
                                 'subtitle' => 'Jelajahi Alam dengan Persiapan Lengkap',
-                                'desc' => 'Nikmati perjalanan setengah hari dengan fasilitas lengkap yang mendukung eksplorasi alam Gunung Pancar dari awal hingga akhir!',
-                                'price' => 165000,
+                                'desc' => isset($packagesDb['Pancar Trek']) && $packagesDb['Pancar Trek']->description ? $packagesDb['Pancar Trek']->description : 'Nikmati perjalanan setengah hari dengan fasilitas lengkap yang mendukung eksplorasi alam Gunung Pancar dari awal hingga akhir!',
+                                'price' => isset($packagesDb['Pancar Trek']) && $packagesDb['Pancar Trek']->base_price > 0 ? $packagesDb['Pancar Trek']->base_price : 165000,
                                 'price_label' => '/ pax',
                                 'features' => ['Tiket Masuk', 'Guide', 'Rute Pilihan', 'Jemputan Mobil Pickup', 'Air Mineral per Peserta', 'Tiket Masuk Curug'],
                                 'input_name' => 'participants_pancar_trek',
                                 'input_placeholder' => 'Nama Peserta / Ketua Rombongan',
                                 'box_msg' => 'Satu harga, semua fasilitas sudah termasuk.',
                                 'unit_label' => 'pax',
-                                'image' => 'https://gunungpancar.co.id/wp-content/uploads/2026/06/2-7.jpg'
+                                'image' => isset($packagesDb['Pancar Trek']) && $packagesDb['Pancar Trek']->image ? asset('storage/' . $packagesDb['Pancar Trek']->image) : 'https://gunungpancar.co.id/wp-content/uploads/2026/06/2-7.jpg'
                             ],
                             [
                                 'model' => 'qty_pancar_school',
                                 'badge' => 'BAWA TENDA SENDIRI',
                                 'title' => 'Pancar School',
                                 'subtitle' => 'Paket kegiatan sekolah di alam terbuka',
-                                'desc' => 'Kegiatan jadi lebih tertata dengan fasilitas utama yang siap mendukung aktivitas dari awal hingga akhir.',
-                                'price' => 125000,
+                                'desc' => isset($packagesDb['Pancar School']) && $packagesDb['Pancar School']->description ? $packagesDb['Pancar School']->description : 'Kegiatan jadi lebih tertata dengan fasilitas utama yang siap mendukung aktivitas dari awal hingga akhir.',
+                                'price' => isset($packagesDb['Pancar School']) && $packagesDb['Pancar School']->base_price > 0 ? $packagesDb['Pancar School']->base_price : 125000,
                                 'price_label' => '/ pax',
                                 'features' => ['Tiket Masuk', 'Toilet', 'Penerangan Area', 'Parkir & Security 24 Jam', 'Rangers', 'Area Camping'],
                                 'input_name' => 'participants_pancar_school',
                                 'input_placeholder' => 'Nama Sekolah / Koordinator',
                                 'box_msg' => 'Satu harga, semua fasilitas sudah termasuk.',
                                 'unit_label' => 'pax',
-                                'image' => 'https://gunungpancar.co.id/wp-content/uploads/2026/07/33.jpg'
+                                'image' => isset($packagesDb['Pancar School']) && $packagesDb['Pancar School']->image ? asset('storage/' . $packagesDb['Pancar School']->image) : 'https://gunungpancar.co.id/wp-content/uploads/2026/07/33.jpg'
                             ],
                             [
                                 'model' => 'qty_prewedding',
                                 'badge' => 'WEDDING PHOTOGRAPHY',
                                 'title' => 'Prewedding / Wedding Photo',
                                 'subtitle' => 'Prewedding & Wedding',
-                                'desc' => 'Hadirkan nuansa romantis di setiap frame dengan backdrop hutan pinus yang alami dan elegan.',
-                                'price' => 750000,
+                                'desc' => isset($packagesDb['Prewedding / Wedding Photo']) && $packagesDb['Prewedding / Wedding Photo']->description ? $packagesDb['Prewedding / Wedding Photo']->description : 'Hadirkan nuansa romantis di setiap frame dengan backdrop hutan pinus yang alami dan elegan.',
+                                'price' => isset($packagesDb['Prewedding / Wedding Photo']) && $packagesDb['Prewedding / Wedding Photo']->base_price > 0 ? $packagesDb['Prewedding / Wedding Photo']->base_price : 750000,
                                 'price_label' => '/ 8 jam',
                                 'features_text' => 'Sesi setengah hari (8 jam) dengan spot foto pilihan. Overtime Rp150.000 / jam.',
                                 'input_name' => 'participants_prewedding',
                                 'input_placeholder' => 'Nama Pasangan',
                                 'box_msg' => 'Abadikan momen spesial dengan latar pinus yang natural dan elegan.',
                                 'unit_label' => 'sesi',
-                                'image' => 'https://gunungpancar.co.id/wp-content/uploads/2026/06/3-4.jpg'
+                                'image' => isset($packagesDb['Prewedding / Wedding Photo']) && $packagesDb['Prewedding / Wedding Photo']->image ? asset('storage/' . $packagesDb['Prewedding / Wedding Photo']->image) : 'https://gunungpancar.co.id/wp-content/uploads/2026/06/3-4.jpg'
                             ],
                             [
                                 'model' => 'qty_foto_produk',
                                 'badge' => 'PRODUCT PHOTOGRAPHY',
                                 'title' => 'Foto Produk',
                                 'subtitle' => 'E-commerce, Katalog',
-                                'desc' => 'Foto produk dengan sentuhan alam yang estetik untuk hasil visual yang lebih menarik, profesional, dan siap digunakan di berbagai media promosi.',
-                                'price' => 7500000,
+                                'desc' => isset($packagesDb['Foto Produk']) && $packagesDb['Foto Produk']->description ? $packagesDb['Foto Produk']->description : 'Foto produk dengan sentuhan alam yang estetik untuk hasil visual yang lebih menarik, profesional, dan siap digunakan di berbagai media promosi.',
+                                'price' => isset($packagesDb['Foto Produk']) && $packagesDb['Foto Produk']->base_price > 0 ? $packagesDb['Foto Produk']->base_price : 7500000,
                                 'price_label' => '/ 8 jam',
                                 'features_text' => 'Satu hari produksi (8 jam). Overtime Rp500.000 / jam.',
                                 'input_name' => 'participants_foto_produk',
                                 'input_placeholder' => 'Nama Brand / Perwakilan',
                                 'box_msg' => 'Siapkan kebutuhan produksi visualmu di lokasi yang lebih berkarakter.',
                                 'unit_label' => 'sesi',
-                                'image' => 'https://gunungpancar.co.id/wp-content/uploads/2026/06/4-2.jpg'
+                                'image' => isset($packagesDb['Foto Produk']) && $packagesDb['Foto Produk']->image ? asset('storage/' . $packagesDb['Foto Produk']->image) : 'https://gunungpancar.co.id/wp-content/uploads/2026/06/4-2.jpg'
                             ],
                             [
                                 'model' => 'qty_shooting',
                                 'badge' => 'COMMERCIAL PRODUCTION',
                                 'title' => 'Shooting Komersial',
                                 'subtitle' => 'Film, Iklan, MV',
-                                'desc' => 'Lokasi outdoor sinematik dengan karakter hutan pinus yang kuat, cocok untuk produksi visual dengan berbagai mood dan konsep.',
-                                'price' => 20000000,
+                                'desc' => isset($packagesDb['Shooting Komersial']) && $packagesDb['Shooting Komersial']->description ? $packagesDb['Shooting Komersial']->description : 'Lokasi outdoor sinematik dengan karakter hutan pinus yang kuat, cocok untuk produksi visual dengan berbagai mood dan konsep.',
+                                'price' => isset($packagesDb['Shooting Komersial']) && $packagesDb['Shooting Komersial']->base_price > 0 ? $packagesDb['Shooting Komersial']->base_price : 20000000,
                                 'price_label' => '/ hari',
                                 'features_text' => 'Durasi 8 jam. Belum termasuk peak season & overtime Rp2.500.000 / jam.',
                                 'input_name' => 'participants_shooting',
                                 'input_placeholder' => 'Nama Production House',
                                 'box_msg' => 'Wujudkan konsep visualmu dengan nuansa hutan pinus Gunung Pancar.',
                                 'unit_label' => 'sesi',
-                                'image' => 'https://gunungpancar.co.id/wp-content/uploads/2026/07/38.jpg'
+                                'image' => isset($packagesDb['Shooting Komersial']) && $packagesDb['Shooting Komersial']->image ? asset('storage/' . $packagesDb['Shooting Komersial']->image) : 'https://gunungpancar.co.id/wp-content/uploads/2026/07/38.jpg'
                             ]
                         ];
                     @endphp
@@ -419,12 +420,12 @@
                 qty_shooting: 0,
                 
                 calculateTotal() {
-                    const hargaGroup = 200000;
-                    const hargaPancarTrek = 165000;
-                    const hargaPancarSchool = 125000;
-                    const hargaPrewedding = 750000;
-                    const hargaFotoProduk = 7500000;
-                    const hargaShooting = 20000000;
+                    const hargaGroup = {{ isset($packagesDb['Paket Group']) && $packagesDb['Paket Group']->base_price > 0 ? $packagesDb['Paket Group']->base_price : 200000 }};
+                    const hargaPancarTrek = {{ isset($packagesDb['Pancar Trek']) && $packagesDb['Pancar Trek']->base_price > 0 ? $packagesDb['Pancar Trek']->base_price : 165000 }};
+                    const hargaPancarSchool = {{ isset($packagesDb['Pancar School']) && $packagesDb['Pancar School']->base_price > 0 ? $packagesDb['Pancar School']->base_price : 125000 }};
+                    const hargaPrewedding = {{ isset($packagesDb['Prewedding / Wedding Photo']) && $packagesDb['Prewedding / Wedding Photo']->base_price > 0 ? $packagesDb['Prewedding / Wedding Photo']->base_price : 750000 }};
+                    const hargaFotoProduk = {{ isset($packagesDb['Foto Produk']) && $packagesDb['Foto Produk']->base_price > 0 ? $packagesDb['Foto Produk']->base_price : 7500000 }};
+                    const hargaShooting = {{ isset($packagesDb['Shooting Komersial']) && $packagesDb['Shooting Komersial']->base_price > 0 ? $packagesDb['Shooting Komersial']->base_price : 20000000 }};
                     
                     return (this.qty_group * hargaGroup) +
                            (this.qty_pancar_trek * hargaPancarTrek) +

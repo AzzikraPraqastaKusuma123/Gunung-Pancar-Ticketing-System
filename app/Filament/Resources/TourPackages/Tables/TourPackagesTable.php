@@ -19,6 +19,7 @@ class TourPackagesTable
                 fn (\App\Models\TourPackage $record): string => TourPackageResource::getUrl('edit', ['record' => $record]),
             )
             ->columns([
+                Filament\Tables\Columns\ImageColumn::make('image'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('base_price')

@@ -11,7 +11,8 @@ class BookingController extends Controller
 {
     public function index()
     {
-        return view('booking');
+        $packagesDb = \App\Models\TourPackage::where('is_active', true)->get()->keyBy('name');
+        return view('booking', compact('packagesDb'));
     }
 
     public function store(Request $request, TicketService $ticketService)

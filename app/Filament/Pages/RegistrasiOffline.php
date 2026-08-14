@@ -124,9 +124,14 @@ class RegistrasiOffline extends Page implements HasForms
         $foto_produk = (int) ($this->data['qty_foto_produk'] ?? 0);
         $shooting = (int) ($this->data['qty_shooting'] ?? 0);
 
-        return ($group * 200000) +
-               ($pancar_trek * 165000) + ($pancar_school * 125000) +
-               ($prewedding * 750000) + ($foto_produk * 7500000) + ($shooting * 20000000);
+        $packagesDb = \App\Models\TourPackage::where('is_active', true)->get()->keyBy('name');
+
+        return ($group * ($packagesDb['Paket Group']->base_price ?? 200000)) +
+               ($pancar_trek * ($packagesDb['Pancar Trek']->base_price ?? 165000)) + 
+               ($pancar_school * ($packagesDb['Pancar School']->base_price ?? 125000)) +
+               ($prewedding * ($packagesDb['Prewedding / Wedding Photo']->base_price ?? 750000)) + 
+               ($foto_produk * ($packagesDb['Foto Produk']->base_price ?? 7500000)) + 
+               ($shooting * ($packagesDb['Shooting Komersial']->base_price ?? 20000000));
     }
 
     public function getJumlahTiketProperty(): int
@@ -169,23 +174,25 @@ class RegistrasiOffline extends Page implements HasForms
                 'payment_method' => $paymentMethod,
             ]);
 
+            $packagesDb = \App\Models\TourPackage::where('is_active', true)->get()->keyBy('name');
+
             if ((int) $data['qty_group'] > 0) {
-                BookingItem::create(['booking_id' => $booking->id, 'category' => 'group', 'quantity' => (int) $data['qty_group'], 'price_per_item' => 200000]);
+                BookingItem::create(['booking_id' => $booking->id, 'category' => 'group', 'quantity' => (int) $data['qty_group'], 'price_per_item' => $packagesDb['Paket Group']->base_price ?? 200000]);
             }
             if ((int) $data['qty_pancar_trek'] > 0) {
-                BookingItem::create(['booking_id' => $booking->id, 'category' => 'pancar_trek', 'quantity' => (int) $data['qty_pancar_trek'], 'price_per_item' => 165000]);
+                BookingItem::create(['booking_id' => $booking->id, 'category' => 'pancar_trek', 'quantity' => (int) $data['qty_pancar_trek'], 'price_per_item' => $packagesDb['Pancar Trek']->base_price ?? 165000]);
             }
             if ((int) $data['qty_pancar_school'] > 0) {
-                BookingItem::create(['booking_id' => $booking->id, 'category' => 'pancar_school', 'quantity' => (int) $data['qty_pancar_school'], 'price_per_item' => 125000]);
+                BookingItem::create(['booking_id' => $booking->id, 'category' => 'pancar_school', 'quantity' => (int) $data['qty_pancar_school'], 'price_per_item' => $packagesDb['Pancar School']->base_price ?? 125000]);
             }
             if ((int) $data['qty_prewedding'] > 0) {
-                BookingItem::create(['booking_id' => $booking->id, 'category' => 'prewedding', 'quantity' => (int) $data['qty_prewedding'], 'price_per_item' => 750000]);
+                BookingItem::create(['booking_id' => $booking->id, 'category' => 'prewedding', 'quantity' => (int) $data['qty_prewedding'], 'price_per_item' => $packagesDb['Prewedding / Wedding Photo']->base_price ?? 750000]);
             }
             if ((int) $data['qty_foto_produk'] > 0) {
-                BookingItem::create(['booking_id' => $booking->id, 'category' => 'foto_produk', 'quantity' => (int) $data['qty_foto_produk'], 'price_per_item' => 7500000]);
+                BookingItem::create(['booking_id' => $booking->id, 'category' => 'foto_produk', 'quantity' => (int) $data['qty_foto_produk'], 'price_per_item' => $packagesDb['Foto Produk']->base_price ?? 7500000]);
             }
             if ((int) $data['qty_shooting'] > 0) {
-                BookingItem::create(['booking_id' => $booking->id, 'category' => 'shooting', 'quantity' => (int) $data['qty_shooting'], 'price_per_item' => 20000000]);
+                BookingItem::create(['booking_id' => $booking->id, 'category' => 'shooting', 'quantity' => (int) $data['qty_shooting'], 'price_per_item' => $packagesDb['Shooting Komersial']->base_price ?? 20000000]);
             }
 
             $ticketService = app(TicketService::class);

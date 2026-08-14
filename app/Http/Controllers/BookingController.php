@@ -55,15 +55,18 @@ class BookingController extends Controller
             return back()->with('error', 'Minimal pilih 1 tiket!');
         }
 
+        // Fetch dari Database
+        $packagesDb = \App\Models\TourPackage::where('is_active', true)->get()->keyBy('name');
+
         // Harga Paket
-        $hargaDewasa = 50000;
-        $hargaAnak = 25000;
-        $hargaGroup = 200000; // Paket isi 5 orang
-        $hargaPancarTrek = 165000;
-        $hargaPancarSchool = 125000;
-        $hargaPrewedding = 750000;
-        $hargaFotoProduk = 7500000;
-        $hargaShooting = 20000000;
+        $hargaDewasa = $packagesDb['Tiket Dewasa']->base_price ?? 50000;
+        $hargaAnak = $packagesDb['Tiket Anak']->base_price ?? 25000;
+        $hargaGroup = $packagesDb['Paket Group']->base_price ?? 200000; // Paket isi 5 orang
+        $hargaPancarTrek = $packagesDb['Pancar Trek']->base_price ?? 165000;
+        $hargaPancarSchool = $packagesDb['Pancar School']->base_price ?? 125000;
+        $hargaPrewedding = $packagesDb['Prewedding / Wedding Photo']->base_price ?? 750000;
+        $hargaFotoProduk = $packagesDb['Foto Produk']->base_price ?? 7500000;
+        $hargaShooting = $packagesDb['Shooting Komersial']->base_price ?? 20000000;
 
         $totalPrice = ($validated['qty_dewasa'] * $hargaDewasa) + 
                       ($validated['qty_anak'] * $hargaAnak) + 

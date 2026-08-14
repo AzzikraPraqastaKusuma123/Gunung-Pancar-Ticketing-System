@@ -239,6 +239,16 @@ class AdminPanelProvider extends PanelProvider
                 ')
             )
             ->renderHook(
+                \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,
+                fn (): string => Blade::render('
+                    <div style="text-align:center; margin-top: 1.5rem;">
+                        <p style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">
+                            Powered by <span style="color: #10b981; font-weight: 700;">PT. Info Tech Support</span>
+                        </p>
+                    </div>
+                ')
+            )
+            ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_START,
                 fn (): string => Blade::render('
                     <!-- ── 3-DOT PAGE PRELOADER ── -->

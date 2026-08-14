@@ -15,7 +15,7 @@ class TourPackageForm
             ->components([
                 TextInput::make('name')
                     ->required(),
-                Filament\Forms\Components\FileUpload::make('image')
+                \Filament\Forms\Components\FileUpload::make('image')
                     ->image()
                     ->directory('tour-packages')
                     ->columnSpanFull(),

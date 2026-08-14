@@ -35,6 +35,7 @@
                 margin: 0 auto !important;
                 padding-top: 10mm !important;
                 padding-bottom: 0 !important;
+                zoom: 1 !important;
                 transform: scale(0.95);
                 transform-origin: top center;
             }
@@ -90,13 +91,12 @@
         </div>
     </div>
 
-    <!-- Scrollable Tickets Container -->
-    <div class="w-full overflow-x-auto pb-10">
-        <div class="min-w-[1000px] flex flex-col items-center mx-auto px-4">
+    <!-- Auto-Scaled Tickets Container -->
+    <div class="w-full pb-10 flex flex-col items-center gap-10 px-4">
 
     @foreach($booking->tickets as $ticket)
     <!-- TICKET -->
-    <div class="ticket-container relative w-[1000px] min-h-[520px] flex shadow-[0_20px_50px_rgba(15,44,35,0.15)] rounded-[2rem] overflow-hidden bg-white mb-10 border border-slate-100">
+    <div class="ticket-container relative w-[1000px] min-h-[520px] flex shadow-[0_20px_50px_rgba(15,44,35,0.15)] rounded-[2rem] overflow-hidden bg-white border border-slate-100">
         
         <!-- LEFT SIDE: Image and Info -->
         <div class="w-[70%] h-full ticket-bg relative text-white rounded-l-[2rem] flex flex-col">
@@ -232,7 +232,34 @@
     </div>
     @endforeach
 
-        </div>
     </div>
+
+    <script>
+        function scaleTicket() {
+            // Use CSS Zoom to perfectly scale the ticket down on mobile devices
+            if (window.matchMedia('print').matches) return; // Don't scale if printing
+            
+            if (window.innerWidth < 1050) {
+                // Calculate scale ratio, leaving 32px (16px left + 16px right) for padding
+                const scale = (window.innerWidth - 32) / 1000;
+                document.querySelectorAll('.ticket-container').forEach(el => {
+                    el.style.zoom = scale;
+                });
+            } else {
+                document.querySelectorAll('.ticket-container').forEach(el => {
+                    el.style.zoom = 1;
+                });
+            }
+        }
+        
+        window.addEventListener('resize', scaleTicket);
+        window.addEventListener('DOMContentLoaded', scaleTicket);
+        
+        // Ensure scale resets correctly before and after print dialog
+        window.addEventListener('beforeprint', () => {
+            document.querySelectorAll('.ticket-container').forEach(el => el.style.zoom = 1);
+        });
+        window.addEventListener('afterprint', scaleTicket);
+    </script>
 </body>
 </html>

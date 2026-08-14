@@ -82,9 +82,9 @@
                     </svg>
                     Simpan PDF / Cetak
                 </button>
-                <a href="{{ url('/admin/bookings') }}" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-colors flex items-center gap-2">
+                <button onclick="history.back()" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-colors flex items-center gap-2">
                     Tutup
-                </a>
+                </button>
             </div>
         </div>
     </div>

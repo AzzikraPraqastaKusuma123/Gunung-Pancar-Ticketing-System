@@ -112,7 +112,7 @@
 
     <div class="no-print preview-actions">
         <button onclick="window.print()" class="btn">🖨️ Cetak Struk</button>
-        <a href="{{ url('/dasbord/registrasi-offline') }}" class="btn btn-secondary">Kembali ke POS</a>
+        <button onclick="history.back()" class="btn btn-secondary">Kembali</button>
     </div>
 
     <script>

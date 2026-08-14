@@ -66,11 +66,13 @@ class BookingsTable
                 //
             ])
             ->recordActions([
-                \Filament\Actions\Action::make('download_ticket')
-                    ->label('E-Ticket')
-                    ->icon('heroicon-o-ticket')
-                    ->color('success')
-                    ->url(fn ($record) => route('ticket.download', $record->uuid))
+                \Filament\Actions\Action::make('print')
+                    ->label(fn ($record) => str_starts_with((string)$record->customer_email, 'walkin_') ? 'Struk Thermal' : 'E-Ticket')
+                    ->icon(fn ($record) => str_starts_with((string)$record->customer_email, 'walkin_') ? 'heroicon-o-printer' : 'heroicon-o-ticket')
+                    ->color(fn ($record) => str_starts_with((string)$record->customer_email, 'walkin_') ? 'gray' : 'success')
+                    ->url(fn ($record) => str_starts_with((string)$record->customer_email, 'walkin_') 
+                        ? route('booking.pos_print', $record->uuid) 
+                        : route('ticket.download', $record->uuid))
                     ->openUrlInNewTab()
                     ->visible(fn ($record) => $record->status === 'paid'),
                 EditAction::make(),

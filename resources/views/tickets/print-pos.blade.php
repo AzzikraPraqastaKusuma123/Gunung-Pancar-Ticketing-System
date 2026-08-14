@@ -112,7 +112,7 @@
 
     <div class="no-print preview-actions">
         <button onclick="window.print()" class="btn">🖨️ Cetak Struk</button>
-        <button onclick="history.back()" class="btn btn-secondary">Kembali</button>
+        <button onclick="if(window.history.length > 1) window.history.back(); else window.close();" class="btn btn-secondary">Kembali</button>
     </div>
 
     <script>

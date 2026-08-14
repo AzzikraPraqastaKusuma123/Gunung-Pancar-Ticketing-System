@@ -86,7 +86,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">Booking ID</p>
-                            <p class="font-mono text-slate-800 font-bold text-sm">{{ $booking->uuid }}</p>
+                            <p class="font-mono text-slate-800 font-bold text-sm">{{ strtoupper(substr($booking->uuid, 0, 8)) }}</p>
                         </div>
                         <div class="text-right">
                             <p class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">Tgl Kunjungan</p>
@@ -95,7 +95,16 @@
                         <div class="col-span-2 pt-3 border-t border-slate-200 mt-1">
                             <p class="text-xs text-slate-400 uppercase tracking-wider font-bold mb-1">Pemesan</p>
                             <p class="text-slate-800 font-bold">{{ $booking->customer_name }}</p>
-                            <p class="text-slate-500 text-sm">{{ $booking->customer_email }}</p>
+                            <div class="flex items-center gap-3 mt-1">
+                                <p class="text-slate-500 text-sm flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    {{ $booking->customer_email }}
+                                </p>
+                                <p class="text-slate-500 text-sm flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                    {{ $booking->customer_phone }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,9 +124,6 @@
                 <div class="space-y-4 mb-8">
                     @foreach($booking->tickets as $ticket)
                     <div class="flex gap-4 items-center p-3 hover:bg-slate-50 rounded-xl transition border border-transparent hover:border-slate-100">
-                        <div class="bg-white p-1 rounded-lg border border-slate-200 shadow-sm shrink-0">
-                            <img src="{{ asset('storage/' . $ticket->qr_code_path) }}" alt="QR" class="w-16 h-16 object-contain">
-                        </div>
                         <div class="flex-1 min-w-0">
                             <div class="font-mono text-sm font-bold text-slate-800 truncate mb-0.5">{{ $ticket->ticket_number }}</div>
                             <div class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">{{ $ticket->category }}</div>
@@ -153,12 +159,7 @@
                         </button>
                         <p class="text-center text-xs text-slate-400 mt-4 font-medium">Selesaikan pembayaran untuk mengaktifkan tiket Anda.</p>
                     @else
-                        @auth
-                        <a href="{{ url('/booking/' . $booking->uuid . '/pos-print') }}" class="flex items-center justify-center w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl transition duration-300 shadow-lg shadow-emerald-600/20 group gap-2 mb-3">
-                            <svg class="w-5 h-5 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                            Cetak Struk (POS Kasir)
-                        </a>
-                        @endauth
+
                         <a href="{{ route('ticket.download', $booking->uuid) }}" class="flex items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition duration-300 shadow-lg shadow-slate-900/20 group gap-2">
                             <svg class="w-5 h-5 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             Unduh PDF Tiket

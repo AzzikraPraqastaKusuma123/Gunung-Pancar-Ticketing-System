@@ -16,25 +16,38 @@ class BookingExporter extends Exporter
     {
         return [
             ExportColumn::make('id')
-                ->label('ID'),
+                ->label('ID Pesanan'),
             ExportColumn::make('uuid')
-                ->label('UUID'),
-            ExportColumn::make('lead.name'),
-            ExportColumn::make('customer_name'),
-            ExportColumn::make('customer_email'),
-            ExportColumn::make('customer_phone'),
-            ExportColumn::make('customer_segment'),
-            ExportColumn::make('activity_type'),
-            ExportColumn::make('pic_sales'),
-            ExportColumn::make('booking_date'),
-            ExportColumn::make('visit_date'),
-            ExportColumn::make('total_price'),
-            ExportColumn::make('status'),
-            ExportColumn::make('special_requirements'),
-            ExportColumn::make('created_at'),
-            ExportColumn::make('updated_at'),
-            ExportColumn::make('payment_url'),
-            ExportColumn::make('payment_method'),
+                ->label('Kode Tiket / UUID'),
+            ExportColumn::make('lead.name')
+                ->label('Asal / Lead'),
+            ExportColumn::make('customer_name')
+                ->label('Nama Pelanggan'),
+            ExportColumn::make('customer_email')
+                ->label('Email'),
+            ExportColumn::make('customer_phone')
+                ->label('No. WhatsApp'),
+            ExportColumn::make('customer_segment')
+                ->label('Segmen Pelanggan'),
+            ExportColumn::make('activity_type')
+                ->label('Jenis Aktivitas'),
+            ExportColumn::make('pic_sales')
+                ->label('PIC Sales'),
+            ExportColumn::make('booking_date')
+                ->label('Tanggal Booking'),
+            ExportColumn::make('visit_date')
+                ->label('Tanggal Kunjungan'),
+            ExportColumn::make('total_price')
+                ->label('Total Harga (Rp)')
+                ->state(fn ($record) => number_format($record->total_price, 0, ',', '.')),
+            ExportColumn::make('status')
+                ->label('Status'),
+            ExportColumn::make('special_requirements')
+                ->label('Permintaan Khusus'),
+            ExportColumn::make('payment_method')
+                ->label('Metode Pembayaran'),
+            ExportColumn::make('created_at')
+                ->label('Dibuat Pada'),
         ];
     }
 

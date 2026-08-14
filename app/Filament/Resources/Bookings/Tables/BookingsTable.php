@@ -80,6 +80,8 @@ class BookingsTable
                     DeleteBulkAction::make(),
                     \Filament\Actions\ExportBulkAction::make()
                         ->exporter(\App\Filament\Exports\BookingExporter::class)
+                        ->formats([\Filament\Actions\Exports\Enums\ExportFormat::Csv, \Filament\Actions\Exports\Enums\ExportFormat::Xlsx])
+                        ->columnMapping(false)
                         ->icon('heroicon-o-document-arrow-down')
                         ->label('Ekspor yang Dipilih')
                         ->color('success'),
@@ -88,8 +90,10 @@ class BookingsTable
             ->headerActions([
                 \Filament\Actions\ExportAction::make()
                     ->exporter(\App\Filament\Exports\BookingExporter::class)
+                    ->formats([\Filament\Actions\Exports\Enums\ExportFormat::Csv, \Filament\Actions\Exports\Enums\ExportFormat::Xlsx])
+                    ->columnMapping(false)
                     ->icon('heroicon-o-document-arrow-down')
-                    ->label('Ekspor Semua Data (Excel)')
+                    ->label('Ekspor Semua Data')
                     ->color('success'),
             ]);
     }

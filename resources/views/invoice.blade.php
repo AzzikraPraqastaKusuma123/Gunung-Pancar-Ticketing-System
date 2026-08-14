@@ -160,11 +160,19 @@
                         <p class="text-center text-xs text-slate-400 mt-4 font-medium">Selesaikan pembayaran untuk mengaktifkan tiket Anda.</p>
                     @else
 
-                        <a href="{{ route('ticket.download', $booking->uuid) }}" class="flex items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition duration-300 shadow-lg shadow-slate-900/20 group gap-2">
-                            <svg class="w-5 h-5 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Unduh PDF Tiket
-                        </a>
-                        <p class="text-center text-xs text-slate-400 mt-4 font-medium">Harap tunjukkan QR Code pada PDF/halaman ini kepada petugas di gerbang masuk.</p>
+                        @if(Str::startsWith($booking->customer_email, 'walkin_'))
+                            <a href="{{ route('booking.pos_print', $booking->uuid) }}" class="flex items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition duration-300 shadow-lg shadow-slate-900/20 group gap-2">
+                                <svg class="w-5 h-5 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                Cetak Struk Thermal
+                            </a>
+                            <p class="text-center text-xs text-slate-400 mt-4 font-medium">Ini adalah pesanan offline. Struk akan dicetak dengan format printer thermal.</p>
+                        @else
+                            <a href="{{ route('ticket.download', $booking->uuid) }}" class="flex items-center justify-center w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition duration-300 shadow-lg shadow-slate-900/20 group gap-2">
+                                <svg class="w-5 h-5 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Unduh PDF Tiket
+                            </a>
+                            <p class="text-center text-xs text-slate-400 mt-4 font-medium">Harap tunjukkan QR Code pada PDF/halaman ini kepada petugas di gerbang masuk.</p>
+                        @endif
                     @endif
                 </div>
 

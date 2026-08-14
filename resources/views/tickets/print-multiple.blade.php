@@ -68,26 +68,31 @@
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen py-10">
+<body class="bg-[#f8fafc] min-h-screen">
 
-    <div class="no-print mb-10 w-[1000px] flex items-center justify-between bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-slate-200/60">
-        <div>
-            <h2 class="text-xl font-extrabold text-slate-800 tracking-tight">Semua Tiket Anda</h2>
-            <p class="text-slate-500 text-sm font-medium">Terdapat {{ $booking->tickets->count() }} tiket dalam pesanan ini.</p>
+    <!-- Responsive Top Bar -->
+    <div class="no-print w-full max-w-[1000px] mx-auto mt-6 mb-6 px-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between bg-white p-5 rounded-2xl shadow-sm border border-slate-200 gap-4">
+            <div class="text-center sm:text-left">
+                <h2 class="text-xl font-extrabold text-slate-800 tracking-tight">Semua Tiket Anda</h2>
+                <p class="text-slate-500 text-sm font-medium">Terdapat {{ $booking->tickets->count() }} tiket dalam pesanan ini.</p>
+            </div>
             <!-- Action Buttons -->
-            <div class="flex gap-4 mt-4">
-                <button onclick="window.print()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition-colors shadow-[0_0_15px_rgba(5,150,105,0.4)] flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
-                    </svg>
-                    Simpan PDF / Cetak
+            <div class="flex gap-3 w-full sm:w-auto">
+                <button onclick="window.print()" class="flex-1 sm:flex-none justify-center px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition-colors shadow-[0_0_15px_rgba(5,150,105,0.4)] flex items-center gap-2 text-sm sm:text-base">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Cetak
                 </button>
-                <button onclick="history.back()" class="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-colors flex items-center gap-2">
+                <button onclick="history.back()" class="flex-1 sm:flex-none justify-center px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg transition-colors flex items-center gap-2 text-sm sm:text-base">
                     Tutup
                 </button>
             </div>
         </div>
     </div>
+
+    <!-- Scrollable Tickets Container -->
+    <div class="w-full overflow-x-auto pb-10">
+        <div class="min-w-[1000px] flex flex-col items-center mx-auto px-4">
 
     @foreach($booking->tickets as $ticket)
     <!-- TICKET -->
@@ -227,5 +232,7 @@
     </div>
     @endforeach
 
+        </div>
+    </div>
 </body>
 </html>

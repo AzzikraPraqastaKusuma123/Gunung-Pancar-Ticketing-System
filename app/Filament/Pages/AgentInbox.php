@@ -11,6 +11,8 @@ class AgentInbox extends Page
     protected static ?string $title = 'Agent Inbox';
     protected static ?string $slug = 'agent-inbox';
     protected static string | \UnitEnum | null $navigationGroup = 'Customer Support';
+    protected static bool $shouldRegisterNavigation = false;
+
     
     protected string $view = 'filament.pages.agent-inbox';
 

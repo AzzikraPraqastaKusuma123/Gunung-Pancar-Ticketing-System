@@ -17,6 +17,8 @@ use Filament\Tables\Table;
 class LeadFollowUpResource extends Resource
 {
     protected static ?string $model = LeadFollowUp::class;
+    protected static bool $shouldRegisterNavigation = false;
+
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

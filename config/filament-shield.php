@@ -20,9 +20,11 @@ return [
     */
 
     'shield_resource' => [
+        'should_register_navigation' => false,
         'slug' => 'shield/roles',
         'show_model_path' => true,
         'cluster' => null,
+
         'tabs' => [
             'pages' => true,
             'widgets' => true,

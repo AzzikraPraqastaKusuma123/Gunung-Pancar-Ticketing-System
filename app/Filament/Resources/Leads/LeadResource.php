@@ -17,6 +17,8 @@ use Filament\Tables\Table;
 class LeadResource extends Resource
 {
     protected static ?string $model = Lead::class;
+    protected static bool $shouldRegisterNavigation = false;
+
 
     protected static ?string $modelLabel = 'Prospek';
     protected static ?string $pluralModelLabel = 'Data Prospek';

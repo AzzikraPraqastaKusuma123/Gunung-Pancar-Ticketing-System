@@ -17,6 +17,8 @@ use Filament\Tables\Table;
 class LetterOfAgreementResource extends Resource
 {
     protected static ?string $model = LetterOfAgreement::class;
+    protected static bool $shouldRegisterNavigation = false;
+
 
     protected static ?string $modelLabel = 'Surat Perjanjian (LOA)';
     protected static ?string $pluralModelLabel = 'Surat Perjanjian (LOA)';

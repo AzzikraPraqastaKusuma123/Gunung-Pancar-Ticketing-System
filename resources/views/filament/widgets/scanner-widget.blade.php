@@ -36,7 +36,7 @@
 
             {{-- LEFT: QR Scanner Camera --}}
             <div class="sw-bg-subtle sw-border" style="position: relative; border-radius: 0.75rem; overflow: hidden; border-width: 1px; border-style: solid; min-height: 400px; width: 100%;">
-                <iframe src="/scanner?widget=true" style="position: absolute; inset: 0; width: 100%; height: 100%; border: none; background: transparent;">
+                <iframe src="/scanner?widget=true" allow="camera" style="position: absolute; inset: 0; width: 100%; height: 100%; border: none; background: transparent;">
                 </iframe>
             </div>
 

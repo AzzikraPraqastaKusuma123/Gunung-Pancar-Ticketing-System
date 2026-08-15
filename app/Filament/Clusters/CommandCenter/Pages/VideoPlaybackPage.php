@@ -2,7 +2,7 @@
 
 namespace App\Filament\Clusters\CommandCenter\Pages;
 
-use App\Filament\Clusters\CommandCenter\CommandCenterCluster;
+
 use Filament\Pages\Page;
 
 class VideoPlaybackPage extends Page
@@ -15,7 +15,7 @@ class VideoPlaybackPage extends Page
 
     protected string $view = 'filament.clusters.command-center.pages.video-playback-page';
 
-    protected static ?string $cluster = \App\Filament\Clusters\CommandCenter\CommandCenterCluster::class;
+    protected static string | \UnitEnum | null $navigationGroup = 'Command Center';
 
     protected static ?int $navigationSort = 4;
 }

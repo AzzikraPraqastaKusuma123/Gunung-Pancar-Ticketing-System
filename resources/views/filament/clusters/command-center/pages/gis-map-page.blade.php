@@ -35,6 +35,21 @@
             });
         });
     </script>
-
-    <!-- Native Filament theme classes will be used via JS -->
+    <style>
+        .camping-theme-wrapper {
+            --bg-dark: #000000;
+            --bg-card: #0a0a0a;
+            --primary: #10b981;
+            --secondary: #059669;
+            --accent: #34d399;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #1f2937;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --success: #22c55e;
+            color: var(--text-main);
+        }
+    </style>
 </x-filament-panels::page>

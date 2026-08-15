@@ -2,7 +2,7 @@
 
 namespace App\Filament\Clusters\CommandCenter\Resources\Devices;
 
-use App\Filament\Clusters\CommandCenter\CommandCenterCluster;
+
 use App\Filament\Clusters\CommandCenter\Resources\Devices\Pages\CreateDevice;
 use App\Filament\Clusters\CommandCenter\Resources\Devices\Pages\EditDevice;
 use App\Filament\Clusters\CommandCenter\Resources\Devices\Pages\ListDevices;
@@ -21,7 +21,7 @@ class DeviceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cpu-chip';
 
-    protected static ?string $cluster = CommandCenterCluster::class;
+    protected static string | \UnitEnum | null $navigationGroup = 'Command Center';
     
     protected static ?string $navigationLabel = 'Manajemen Perangkat';
     protected static ?string $modelLabel = 'Perangkat Jaringan';

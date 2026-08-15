@@ -14,13 +14,13 @@
             }
         };
     </script>
-    <script src="{{ asset('js/components/pemetaanJaringan.js') }}"></script>
+    <script src="{{ asset('js/components/networkTopology.js') }}?v={{ time() }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('app');
-            // Assuming renderPemetaanJaringan returns a DOM element
-            if(typeof renderPemetaanJaringan === 'function') {
-                const component = renderPemetaanJaringan();
+            // Assuming renderNetworkTopology returns a DOM element
+            if(typeof renderNetworkTopology === 'function') {
+                const component = renderNetworkTopology();
                 container.appendChild(component);
             }
         });

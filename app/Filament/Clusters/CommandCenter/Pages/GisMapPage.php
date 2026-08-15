@@ -2,7 +2,7 @@
 
 namespace App\Filament\Clusters\CommandCenter\Pages;
 
-use App\Filament\Clusters\CommandCenter\CommandCenterCluster;
+
 use Filament\Pages\Page;
 
 class GisMapPage extends Page
@@ -11,7 +11,7 @@ class GisMapPage extends Page
     protected static ?string $navigationLabel = 'Peta Monitoring GIS';
     protected static ?string $title = 'Peta Monitoring GIS';
     protected string $view = 'filament.clusters.command-center.pages.gis-map-page';
-    protected static ?string $cluster = CommandCenterCluster::class;
+    protected static string | \UnitEnum | null $navigationGroup = 'Command Center';
     protected static ?int $navigationSort = 1;
 
     protected function getHeaderWidgets(): array
@@ -24,6 +24,8 @@ class GisMapPage extends Page
     public function getDevices()
     {
         return \App\Models\Device::all()->map(function ($device) {
+            // Seed a consistent random position based on ID for dummy data
+            srand($device->id);
             return [
                 'id' => $device->id,
                 'name' => $device->name,
@@ -31,8 +33,8 @@ class GisMapPage extends Page
                 'status' => $device->status,
                 'ip_address' => $device->ip_address,
                 'location' => $device->location,
-                'latitude' => $device->latitude,
-                'longitude' => $device->longitude,
+                'x' => $device->longitude ?: rand(10, 90),
+                'y' => $device->latitude ?: rand(10, 90),
             ];
         })->toJson();
     }

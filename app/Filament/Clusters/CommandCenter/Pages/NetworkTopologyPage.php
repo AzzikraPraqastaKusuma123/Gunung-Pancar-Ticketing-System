@@ -11,6 +11,8 @@ class NetworkTopologyPage extends Page
 
     protected static ?string $navigationLabel = 'Pemetaan Jaringan';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $title = 'Network Topology';
 
     protected string $view = 'filament.clusters.command-center.pages.network-topology-page';

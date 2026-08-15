@@ -22,7 +22,7 @@ function renderPemetaanJaringan() {
 
         .bottom-dashboard-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 2fr);
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 24px;
         }
 
@@ -314,10 +314,10 @@ function renderPemetaanJaringan() {
         .act-content strong { color: white; display: block; margin-bottom: 2px; }
         .act-content span { color: #a1a1aa; }
         
-        .sys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .sys-item { background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .sys-val { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 4px; }
-        .sys-label { font-size: 0.75rem; color: #a1a1aa; text-transform: uppercase; letter-spacing: 1px; }
+        .sys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .sys-item { background: rgba(0,0,0,0.3); padding: 12px 8px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .sys-val { font-size: 1.25rem; font-weight: 800; color: white; margin-bottom: 4px; white-space: nowrap; }
+        .sys-label { font-size: 0.65rem; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; word-wrap: break-word; }
 
     `;
 
@@ -533,10 +533,11 @@ function renderPemetaanJaringan() {
                 
                 if (node.type === 'cctv' && sidebarLive && cctvCount < 4) {
                     const fallbackImages = [
-                        'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=300&auto=format&fit=crop',
-                        'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?q=80&w=300&auto=format&fit=crop',
-                        'https://images.unsplash.com/photo-1478827387698-1527781a4887?q=80&w=300&auto=format&fit=crop',
-                        'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=300&auto=format&fit=crop'
+                        '/images/cctv/cctv_glamping_1786524341566.jpg',
+                        '/images/cctv/cctv_camping_b.jpg',
+                        '/images/cctv/cctv_parking_lot.jpg',
+                        '/images/cctv/cctv_gerbang_1786524324305.jpg',
+                        '/images/cctv/cctv_resepsionis_1786524352663.jpg'
                     ];
                     const fallbackImg = fallbackImages[cctvCount % fallbackImages.length];
                     const imgSrc = (node.image && node.image.length > 5 && !node.image.includes('fallback')) ? node.image : fallbackImg;

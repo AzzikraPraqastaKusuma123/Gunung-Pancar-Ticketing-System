@@ -10,7 +10,7 @@ class RevenueMetricsWidget extends ChartWidget
 {
 
     protected ?string $heading = 'Grafik Pendapatan (Per Bulan)';
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
     protected ?string $maxHeight = '250px';
 
     public static function canView(): bool

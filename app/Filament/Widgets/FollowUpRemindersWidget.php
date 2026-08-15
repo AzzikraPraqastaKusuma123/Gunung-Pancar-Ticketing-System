@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class FollowUpRemindersWidget extends TableWidget
 {
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 7;
     public function getColumnSpan(): int | string | array
     {
         return [

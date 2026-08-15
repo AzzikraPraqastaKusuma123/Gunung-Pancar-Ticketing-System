@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class TicketAnalyticsWidget extends ChartWidget
 {
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 1;
     public ?string $filter = 'year';
 
     public function getHeading(): string

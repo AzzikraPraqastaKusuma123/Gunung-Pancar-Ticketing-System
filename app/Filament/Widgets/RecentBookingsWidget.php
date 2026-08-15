@@ -13,6 +13,8 @@ use Carbon\Carbon;
 
 class RecentBookingsWidget extends TableWidget
 {
+    protected static ?int $sort = 6;
+
 
     public function getColumnSpan(): int | string | array
     {

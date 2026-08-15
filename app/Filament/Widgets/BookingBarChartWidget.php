@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class BookingBarChartWidget extends ChartWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
     public ?string $filter = 'week';
 
     public function getHeading(): string

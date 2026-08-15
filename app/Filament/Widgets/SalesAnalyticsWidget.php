@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class SalesAnalyticsWidget extends StatsOverviewWidget
 {
 
-    protected static ?int $sort = 1;
+    protected static ?int $sort = -1;
 
     public static function canView(): bool
     {

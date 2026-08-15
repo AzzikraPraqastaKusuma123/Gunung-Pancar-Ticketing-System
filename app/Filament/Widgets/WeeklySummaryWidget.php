@@ -13,7 +13,7 @@ use Carbon\Carbon;
 class WeeklySummaryWidget extends BaseWidget
 {
 
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 5;
     protected ?string $pollingInterval = '15s';
 
     public static function canView(): bool

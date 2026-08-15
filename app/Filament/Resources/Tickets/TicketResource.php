@@ -21,7 +21,7 @@ class TicketResource extends Resource
     protected static ?string $modelLabel = 'Tiket';
     protected static ?string $pluralModelLabel = 'Data Tiket';
     protected static string|\UnitEnum|null $navigationGroup = 'Pemesanan Tiket';
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 

@@ -66,6 +66,38 @@ class BookingsTable
                 //
             ])
             ->recordActions([
+                \Filament\Actions\Action::make('send_wa')
+                    ->label('Kirim E-Ticket WA')
+                    ->icon('heroicon-o-chat-bubble-left-ellipsis')
+                    ->color('success')
+                    ->action(function (\App\Models\Booking $record) {
+                        $phone = $record->customer_phone;
+                        if (!$phone) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Nomor Telepon Kosong')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+                        
+                        $message = "Halo *{$record->customer_name}*,\n\nTerima kasih telah memesan tiket di *Gunung Pancar*. Pembayaran Anda telah kami terima!\n\nSilakan unduh E-Ticket Anda melalui tautan berikut:\n" . route('ticket.download', $record->uuid) . "\n\nTerima kasih!";
+                        
+                        $result = app(\App\Services\WhatsappService::class)->sendMessage($phone, $message);
+                        
+                        if ($result) {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Pesan WhatsApp Berhasil Dikirim')
+                                ->success()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Gagal Mengirim WhatsApp')
+                                ->body('Pastikan integrasi Meta API berjalan (cek .env).')
+                                ->danger()
+                                ->send();
+                        }
+                    })
+                    ->visible(fn ($record) => $record->status === 'paid'),
                 \Filament\Actions\Action::make('print')
                     ->label(fn ($record) => str_starts_with((string)$record->customer_email, 'walkin_') ? 'Struk Thermal' : 'E-Ticket')
                     ->icon(fn ($record) => str_starts_with((string)$record->customer_email, 'walkin_') ? 'heroicon-o-printer' : 'heroicon-o-ticket')

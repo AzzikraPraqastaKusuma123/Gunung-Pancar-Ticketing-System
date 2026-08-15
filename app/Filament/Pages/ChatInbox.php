@@ -9,10 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatInbox extends Page
 {
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static ?string $title = 'Agent Inbox';
     protected ?string $heading = 'Agent Inbox';
+    
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
+    protected static ?string $navigationLabel = 'Inbox Customer Service';
+    protected static string | \UnitEnum | null $navigationGroup = 'Customer Support';
+    protected static ?int $navigationSort = 1;
 
     protected string $view = 'filament.pages.chat-inbox';
 
@@ -88,9 +93,14 @@ class ChatInbox extends Page
                 'participant_id' => Auth::id(),
             ]);
 
+            $textToSend = $this->messageContent;
             $this->messageContent = '';
             
-            // TODO: In Phase 5/8 trigger job to actually send message to WhatsApp API
+            // Send message to WhatsApp API
+            $customerPhone = $conversation->customer->phone_number ?? null;
+            if ($customerPhone) {
+                app(\App\Services\WhatsappService::class)->sendMessage($customerPhone, $textToSend);
+            }
         }
     }
 

@@ -45,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
                 'success' => \Filament\Support\Colors\Color::Emerald,
                 'warning' => \Filament\Support\Colors\Color::Amber,
             ])
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\Filament\Clusters')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

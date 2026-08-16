@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('dasbord')
             ->login()
             ->profile(\App\Filament\Pages\EditProfile::class)
-            ->brandName('TicketBrain')
+            ->brandName('Camping')
             ->brandLogo(fn () => asset('images/logo_gunung_pancar.png'))
             ->brandLogoHeight('2.5rem')
             ->font('Plus Jakarta Sans', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap')

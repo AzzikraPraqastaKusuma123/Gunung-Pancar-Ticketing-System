@@ -24,17 +24,28 @@ class GisMapPage extends Page
     public function getDevices()
     {
         return \App\Models\Device::all()->map(function ($device) {
-            // Seed a consistent random position based on ID for dummy data
-            srand($device->id);
+            // Gunakan seed deterministik berdasarkan ID agar posisi TIDAK berubah setiap refresh
+            // Hanya dipakai jika koordinat asli (latitude/longitude) belum diisi di database
+            $fallbackX = (($device->id * 37 + 13) % 80) + 10; // range 10-90, deterministik
+            $fallbackY = (($device->id * 53 + 7)  % 70) + 15; // range 15-85, deterministik
+
             return [
-                'id' => $device->id,
-                'name' => $device->name,
-                'type' => $device->type,
-                'status' => $device->status,
+                'id'         => $device->id,
+                'name'       => $device->name,
+                'type'       => $device->type,
+                'status'     => $device->status,
                 'ip_address' => $device->ip_address,
-                'location' => $device->location,
-                'x' => $device->longitude ?: rand(10, 90),
-                'y' => $device->latitude ?: rand(10, 90),
+                'mac_address'=> $device->mac_address,
+                'location'   => $device->location,
+                'thumbnail_url' => $device->thumbnail_url,
+                'stream_url' => $device->stream_url,
+                // Pakai koordinat DB jika ada, fallback ke nilai deterministik
+                'x'  => $device->longitude ? (float) $device->longitude : $fallbackX,
+                'y'  => $device->latitude  ? (float) $device->latitude  : $fallbackY,
+                // Alias untuk kompatibilitas JS lama
+                'ip'    => $device->ip_address,
+                'image' => $device->thumbnail_url,
+                'mac'   => $device->mac_address,
             ];
         })->toJson();
     }

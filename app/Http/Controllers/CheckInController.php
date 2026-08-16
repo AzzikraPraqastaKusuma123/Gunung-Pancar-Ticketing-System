@@ -21,11 +21,15 @@ class CheckInController extends Controller
         }
 
         if ($ticket->status === 'used') {
-            return response()->json(['success' => false, 'message' => 'Tiket sudah digunakan pada ' . $ticket->used_at]);
+            return response()->json(['success' => false, 'message' => 'Tiket sudah digunakan pada ' . $ticket->used_at->format('d M Y H:i')]);
         }
 
         if ($ticket->status === 'cancelled') {
             return response()->json(['success' => false, 'message' => 'Tiket ini telah dibatalkan.']);
+        }
+
+        if ($ticket->booking && $ticket->booking->status !== 'paid') {
+            return response()->json(['success' => false, 'message' => 'Pembayaran booking belum dikonfirmasi (status: ' . $ticket->booking->status . ').']);
         }
 
         // Tandai sebagai used
@@ -42,6 +46,31 @@ class CheckInController extends Controller
                 'customer' => $ticket->booking->customer_name,
                 'category' => $ticket->category,
                 'pax' => $ticket->participant_count
+            ]
+        ]);
+    }
+
+    /**
+     * GET - Safe read-only check tanpa mengubah data.
+     * Digunakan jika QR code di-scan langsung via browser/link.
+     */
+    public function validateTicketGet($ticketNumber)
+    {
+        $ticket = Ticket::with('booking')->where('ticket_number', $ticketNumber)->first();
+
+        if (!$ticket) {
+            return response()->json(['success' => false, 'message' => 'Tiket tidak ditemukan.', 'readonly' => true]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tiket ditemukan. Gunakan Scanner Gate untuk melakukan check-in.',
+            'readonly' => true,
+            'data' => [
+                'ticket_number' => $ticket->ticket_number,
+                'status' => $ticket->status,
+                'customer' => $ticket->booking->customer_name ?? 'N/A',
+                'category' => $ticket->category,
             ]
         ]);
     }

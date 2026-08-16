@@ -58,15 +58,27 @@ class BookingController extends Controller
         // Fetch dari Database
         $packagesDb = \App\Models\TourPackage::where('is_active', true)->get()->keyBy('name');
 
-        // Harga Paket
-        $hargaDewasa = $packagesDb['Tiket Dewasa']->base_price ?? 50000;
-        $hargaAnak = $packagesDb['Tiket Anak']->base_price ?? 25000;
-        $hargaGroup = $packagesDb['Paket Group']->base_price ?? 200000; // Paket isi 5 orang
-        $hargaPancarTrek = $packagesDb['Pancar Trek']->base_price ?? 165000;
-        $hargaPancarSchool = $packagesDb['Pancar School']->base_price ?? 125000;
-        $hargaPrewedding = $packagesDb['Prewedding / Wedding Photo']->base_price ?? 750000;
-        $hargaFotoProduk = $packagesDb['Foto Produk']->base_price ?? 7500000;
-        $hargaShooting = $packagesDb['Shooting Komersial']->base_price ?? 20000000;
+        // Harga Paket (Strict dari DB, hapus fallback hardcoded)
+        $hargaDewasa = $packagesDb['Tiket Dewasa']->base_price ?? null;
+        $hargaAnak = $packagesDb['Tiket Anak']->base_price ?? null;
+        $hargaGroup = $packagesDb['Paket Group']->base_price ?? null;
+        $hargaPancarTrek = $packagesDb['Pancar Trek']->base_price ?? null;
+        $hargaPancarSchool = $packagesDb['Pancar School']->base_price ?? null;
+        $hargaPrewedding = $packagesDb['Prewedding / Wedding Photo']->base_price ?? null;
+        $hargaFotoProduk = $packagesDb['Foto Produk']->base_price ?? null;
+        $hargaShooting = $packagesDb['Shooting Komersial']->base_price ?? null;
+
+        // Validasi ketersediaan paket
+        if (($validated['qty_dewasa'] > 0 && !$hargaDewasa) || 
+            ($validated['qty_anak'] > 0 && !$hargaAnak) ||
+            ($validated['qty_group'] > 0 && !$hargaGroup) ||
+            ($validated['qty_pancar_trek'] > 0 && !$hargaPancarTrek) ||
+            ($validated['qty_pancar_school'] > 0 && !$hargaPancarSchool) ||
+            ($validated['qty_prewedding'] > 0 && !$hargaPrewedding) ||
+            ($validated['qty_foto_produk'] > 0 && !$hargaFotoProduk) ||
+            ($validated['qty_shooting'] > 0 && !$hargaShooting)) {
+            return back()->with('error', 'Beberapa paket yang dipilih sedang tidak tersedia atau tidak aktif.');
+        }
 
         $totalPrice = ($validated['qty_dewasa'] * $hargaDewasa) + 
                       ($validated['qty_anak'] * $hargaAnak) + 

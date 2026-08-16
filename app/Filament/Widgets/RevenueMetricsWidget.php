@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class RevenueMetricsWidget extends ChartWidget
 {
 
-    protected ?string $heading = 'Grafik Pendapatan (Per Bulan)';
+    protected ?string $heading = 'Grafik Pendapatan';
     protected static ?int $sort = 3;
     protected ?string $maxHeight = '250px';
 

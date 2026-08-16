@@ -67,19 +67,19 @@ class WeeklySummaryWidget extends BaseWidget
         $ticketDesc = abs($ticketDiff) . ' vs minggu lalu';
 
         return [
-            Stat::make('Total Pendapatan (Minggu Ini)', 'Rp ' . number_format($revenueThisWeek, 0, ',', '.'))
+            Stat::make('Total Pendapatan', 'Rp ' . number_format($revenueThisWeek, 0, ',', '.'))
                 ->description($revenueDesc)
                 ->descriptionIcon($revenueIcon)
                 ->color($revenueColor)
                 ->chart([7, 4, 6, 8, 12, 10, $revenueThisWeek > 0 ? 15 : 5]), // Mock sparkline
                 
-            Stat::make('Prospek Baru (Minggu Ini)', $leadsThisWeek)
+            Stat::make('Prospek Baru', $leadsThisWeek)
                 ->description($leadDesc)
                 ->descriptionIcon($leadIcon)
                 ->color($leadColor)
                 ->chart([1, 2, 1, 4, 3, 5, $leadsThisWeek > 0 ? 8 : 2]),
 
-            Stat::make('Tiket Dipindai (Minggu Ini)', $ticketsThisWeek)
+            Stat::make('Tiket Dipindai', $ticketsThisWeek)
                 ->description($ticketDesc)
                 ->descriptionIcon($ticketIcon)
                 ->color($ticketColor)

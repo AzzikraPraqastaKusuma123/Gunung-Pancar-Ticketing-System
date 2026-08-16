@@ -1,20 +1,179 @@
 <x-filament-panels::page>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-[calc(100vh-10rem)] min-h-[600px]" wire:poll.3s>
+    <style>
+        .chat-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 1.5rem;
+            height: calc(100vh - 11rem);
+            min-height: 600px;
+        }
+        @media (max-width: 1024px) {
+            .chat-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+        
+        .chat-panel {
+            background-color: rgb(255 255 255 / 1);
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        :is(.dark .chat-panel) {
+            background-color: rgba(24, 24, 27, 1);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background-color: rgba(249, 250, 251, 0.5);
+        }
+        :is(.dark .chat-header) {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(24, 24, 27, 0.5);
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            width: 100%;
+        }
+        :is(.dark .chat-item) {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+        .chat-item:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        :is(.dark .chat-item:hover) {
+            background-color: rgba(255,255,255,0.02);
+        }
+        .chat-item.active {
+            background-color: rgba(var(--primary-500), 0.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: rgba(249, 250, 251, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        :is(.dark .chat-messages) {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            position: relative;
+        }
+        
+        .chat-bubble-customer {
+            align-self: flex-start;
+            background-color: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-bottom-left-radius: 0.25rem;
+        }
+        :is(.dark .chat-bubble-customer) {
+            background-color: rgba(39, 39, 42, 1);
+            border-color: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .chat-bubble-agent {
+            align-self: flex-end;
+            background-color: rgba(var(--primary-600), 1);
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .chat-bubble-ai {
+            align-self: flex-end;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: rgba(4, 120, 87, 1);
+            border-bottom-right-radius: 0.25rem;
+        }
+        :is(.dark .chat-bubble-ai) {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: rgba(110, 231, 183, 1);
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            background-color: white;
+            display: flex;
+            gap: 0.75rem;
+        }
+        :is(.dark .chat-input-area) {
+            border-top-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(24, 24, 27, 1);
+        }
+        
+        .chat-input {
+            flex: 1;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            outline: none;
+            background: transparent;
+        }
+        :is(.dark .chat-input) {
+            border-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .chat-input:focus {
+            border-color: rgba(var(--primary-500), 1);
+            box-shadow: 0 0 0 1px rgba(var(--primary-500), 1);
+        }
+
+        .chat-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(156, 163, 175, 1);
+        }
+    </style>
+
+    <div class="chat-container" wire:poll.3s>
         
         <!-- Left Column: Conversations List -->
-        <div class="col-span-1 bg-white dark:bg-gray-900 shadow-sm rounded-xl ring-1 ring-gray-950/5 dark:ring-white/10 overflow-y-auto flex flex-col">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-10">
-                <h3 class="font-semibold text-gray-950 dark:text-white">Conversations</h3>
+        <div class="chat-panel">
+            <div class="chat-header">
+                <h3 style="font-weight: 600;">Conversations</h3>
             </div>
-            <div class="flex flex-col divide-y divide-gray-200 dark:divide-white/10 flex-1">
+            <div class="chat-list">
                 @forelse($this->conversations as $conversation)
-                    <button wire:click="loadConversation({{ $conversation->id }})" 
-                            class="p-4 text-left transition hover:bg-gray-50 dark:hover:bg-white/5 {{ $activeConversationId === $conversation->id ? 'bg-primary-50 dark:bg-primary-500/10' : '' }}">
-                        <div class="flex justify-between items-start">
-                            <span class="font-medium text-sm text-gray-950 dark:text-white">{{ $conversation->customer->name ?? 'Unknown' }}</span>
-                            <span class="text-xs text-gray-500 whitespace-nowrap ml-2">{{ $conversation->last_message_at?->diffForHumans(null, true, true) }}</span>
+                    <button wire:click="loadConversation({{ $conversation->id }})" class="chat-item {{ $activeConversationId === $conversation->id ? 'active' : '' }}">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 500; font-size: 0.875rem;">{{ $conversation->customer->name ?? 'Unknown' }}</span>
+                            <span style="font-size: 0.75rem; opacity: 0.6;">{{ $conversation->last_message_at?->diffForHumans(null, true, true) }}</span>
                         </div>
-                        <div class="mt-2 flex items-center justify-between">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                             <x-filament::badge size="xs" color="{{ $conversation->status === 'AI_HANDLING' ? 'success' : 'warning' }}">
                                 {{ str_replace('_', ' ', $conversation->status) }}
                             </x-filament::badge>
@@ -26,7 +185,7 @@
                         </div>
                     </button>
                 @empty
-                    <div class="p-8 text-center text-gray-400 text-sm flex-1 flex items-center justify-center">
+                    <div style="padding: 2rem; text-align: center; color: gray; font-size: 0.875rem;">
                         No active conversations
                     </div>
                 @endforelse
@@ -34,15 +193,15 @@
         </div>
 
         <!-- Center Column: Chat Window -->
-        <div class="col-span-2 bg-white dark:bg-gray-900 shadow-sm rounded-xl ring-1 ring-gray-950/5 dark:ring-white/10 flex flex-col relative overflow-hidden">
+        <div class="chat-panel">
             @if($this->activeConversation)
                 <!-- Chat Header -->
-                <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-white/5 absolute top-0 w-full z-10 backdrop-blur-md">
+                <div class="chat-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <h3 class="font-semibold text-gray-950 dark:text-white">{{ $this->activeConversation->customer->name }}</h3>
-                        <p class="text-xs text-gray-500">{{ $this->activeConversation->customer->phone_number }}</p>
+                        <h3 style="font-weight: 600; font-size: 1rem;">{{ $this->activeConversation->customer->name }}</h3>
+                        <p style="font-size: 0.75rem; opacity: 0.7;">{{ $this->activeConversation->customer->phone_number }}</p>
                     </div>
-                    <div class="flex gap-2">
+                    <div>
                         @if($this->activeConversation->status === 'AI_HANDLING')
                             <x-filament::button size="sm" wire:click="takeOver" color="warning" icon="heroicon-m-hand-raised">
                                 Take Over
@@ -56,44 +215,46 @@
                 </div>
 
                 <!-- Chat Messages -->
-                <div class="flex-1 p-4 overflow-y-auto space-y-4 pt-24 pb-24 bg-gray-50/50 dark:bg-gray-900/50" id="chat-messages">
+                <div class="chat-messages" id="chat-messages">
                     @forelse($this->messages as $message)
                         @php
                             $isCustomer = $message->sender_type === 'customer';
                             $isAi = $message->sender_type === 'ai';
                             $isAgent = $message->sender_type === 'human_agent';
+                            
+                            $bubbleClass = $isCustomer ? 'chat-bubble-customer' : ($isAi ? 'chat-bubble-ai' : 'chat-bubble-agent');
                         @endphp
-                        <div class="flex flex-col {{ $isCustomer ? 'items-start' : 'items-end' }}">
-                            <span class="text-[10px] text-gray-500 mb-1 px-1 font-medium">
+                        
+                        <div style="display: flex; flex-direction: column; align-items: {{ $isCustomer ? 'flex-start' : 'flex-end' }}; width: 100%;">
+                            <span style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 0.25rem;">
                                 {{ $isAi ? '🤖 AI Assistant' : ($isAgent ? '👨‍💻 You (Agent)' : '👤 ' . $this->activeConversation->customer->name) }}
                             </span>
-                            <div class="max-w-[85%] px-4 py-2.5 rounded-2xl shadow-sm 
-                                {{ $isCustomer ? 'bg-white dark:bg-gray-800 ring-1 ring-gray-950/5 dark:ring-white/10 text-gray-900 dark:text-gray-100 rounded-bl-sm' : 
-                                  ($isAi ? 'bg-success-100 dark:bg-success-900/40 text-success-900 dark:text-success-100 ring-1 ring-success-500/20 rounded-br-sm' : 
-                                           'bg-primary-600 text-white rounded-br-sm') }}">
-                                <p class="text-sm whitespace-pre-wrap leading-relaxed">{{ $message->content }}</p>
+                            
+                            <div class="chat-bubble {{ $bubbleClass }}">
+                                {!! nl2br(e($message->content)) !!}
                             </div>
-                            <span class="text-[10px] text-gray-400 mt-1 px-1">
-                                {{ $message->created_at->format('H:i') }} 
+                            
+                            <span style="font-size: 0.65rem; opacity: 0.5; margin-top: 0.25rem;">
+                                {{ $message->created_at->format('H:i') }}
                                 @if(!$isCustomer)
-                                    <span class="ml-1 opacity-75">&bull; {{ ucfirst($message->status) }}</span>
+                                    <span style="margin-left: 0.25rem;">&bull; {{ ucfirst($message->status) }}</span>
                                 @endif
                             </span>
                         </div>
                     @empty
-                        <div class="h-full flex items-center justify-center text-gray-400 text-sm">
+                        <div class="chat-placeholder">
                             <p>No messages yet.</p>
                         </div>
                     @endforelse
                 </div>
 
                 <!-- Chat Input Area -->
-                <div class="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 absolute bottom-0 w-full z-10">
-                    <form wire:submit.prevent="sendMessage" class="flex gap-3">
+                <div style="display: flex; flex-direction: column;">
+                    <form wire:submit.prevent="sendMessage" class="chat-input-area">
                         <input type="text" 
                                wire:model="messageContent" 
                                placeholder="{{ $this->activeConversation->status === 'AI_HANDLING' ? 'Take over to type a message...' : 'Type a message...' }}" 
-                               class="flex-1 rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-800 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm disabled:opacity-50 disabled:bg-gray-50 dark:disabled:bg-gray-900" 
+                               class="chat-input"
                                {{ $this->activeConversation->status === 'AI_HANDLING' ? 'disabled' : '' }}
                                autocomplete="off"
                         >
@@ -102,50 +263,51 @@
                         </x-filament::button>
                     </form>
                     @if($this->activeConversation->status === 'AI_HANDLING')
-                        <p class="text-[10px] text-warning-600 dark:text-warning-400 mt-2 text-center font-medium">⚠️ You are in view-only mode. Click "Take Over" to pause AI and reply.</p>
+                        <div style="background-color: rgba(245, 158, 11, 0.1); color: #d97706; font-size: 0.75rem; text-align: center; padding: 0.5rem; font-weight: 500;">
+                            ⚠️ You are in view-only mode. Click "Take Over" to pause AI and reply.
+                        </div>
                     @endif
                 </div>
             @else
-                <div class="flex-1 flex items-center justify-center text-gray-400 text-center flex-col gap-4 bg-gray-50/50 dark:bg-gray-900/50">
-                    <div class="p-5 rounded-full bg-white dark:bg-gray-800 shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10">
-                        <x-heroicon-o-chat-bubble-oval-left-ellipsis class="w-12 h-12 text-gray-300 dark:text-gray-600" />
-                    </div>
-                    <p class="text-sm font-medium text-gray-500">Select a conversation to start messaging</p>
+                <div class="chat-placeholder">
+                    <x-heroicon-o-chat-bubble-oval-left-ellipsis style="width: 4rem; height: 4rem; opacity: 0.2; margin-bottom: 1rem;" />
+                    <p style="font-weight: 500;">Select a conversation to start messaging</p>
                 </div>
             @endif
         </div>
 
         <!-- Right Column: Context & CRM Data -->
-        <div class="col-span-1 bg-white dark:bg-gray-900 shadow-sm rounded-xl ring-1 ring-gray-950/5 dark:ring-white/10 p-5 overflow-y-auto">
+        <div class="chat-panel" style="padding: 1.25rem; overflow-y: auto;">
             @if($this->activeConversation)
-                <h3 class="font-semibold text-gray-950 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-800 pb-3 flex items-center gap-2">
-                    <x-heroicon-o-user class="w-4 h-4 text-primary-500"/>
+                <h3 style="font-weight: 600; font-size: 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.75rem;">
+                    <x-heroicon-o-user style="width: 1.25rem; height: 1.25rem; color: rgba(var(--primary-500), 1);" />
                     Customer Context
                 </h3>
                 
-                <div class="space-y-6">
+                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
                     <div>
-                        <span class="text-gray-500 block text-[10px] uppercase tracking-wider font-bold mb-1">Name</span>
-                        <span class="font-semibold text-gray-900 dark:text-gray-100 text-sm">{{ $this->activeConversation->customer->name }}</span>
-                    </div>
-                    <div>
-                        <span class="text-gray-500 block text-[10px] uppercase tracking-wider font-bold mb-1">Phone Number</span>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $this->activeConversation->customer->phone_number }}</span>
+                        <span style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; opacity: 0.5; display: block; margin-bottom: 0.25rem;">Name</span>
+                        <span style="font-size: 0.875rem; font-weight: 600;">{{ $this->activeConversation->customer->name }}</span>
                     </div>
                     
-                    <div class="bg-gradient-to-br from-primary-50 to-primary-100/50 dark:from-primary-900/20 dark:to-primary-800/10 rounded-xl p-4 ring-1 ring-primary-500/20">
-                        <span class="text-primary-700 dark:text-primary-400 block text-[10px] uppercase tracking-wider font-bold mb-2 flex items-center gap-1.5">
-                            <x-heroicon-o-sparkles class="w-3.5 h-3.5"/>
+                    <div>
+                        <span style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; opacity: 0.5; display: block; margin-bottom: 0.25rem;">Phone Number</span>
+                        <span style="font-size: 0.875rem;">{{ $this->activeConversation->customer->phone_number }}</span>
+                    </div>
+                    
+                    <div style="background-color: rgba(var(--primary-500), 0.05); border: 1px solid rgba(var(--primary-500), 0.1); border-radius: 0.75rem; padding: 1rem;">
+                        <span style="color: rgba(var(--primary-600), 1); font-size: 0.65rem; text-transform: uppercase; font-weight: 700; display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.5rem;">
+                            <x-heroicon-o-sparkles style="width: 0.875rem; height: 0.875rem;" />
                             AI Brain Summary
                         </span>
-                        <p class="text-gray-700 dark:text-gray-300 italic text-xs leading-relaxed">
+                        <p style="font-size: 0.75rem; font-style: italic; opacity: 0.8; line-height: 1.5;">
                             {{ $this->activeConversation->customer->ai_summary ?? 'The AI is currently analyzing this customer. Check back later after a few interactions.' }}
                         </p>
                     </div>
 
                     <div>
-                        <span class="text-gray-500 block text-[10px] uppercase tracking-wider font-bold mb-2">Customer Tags</span>
-                        <div class="flex flex-wrap gap-1.5">
+                        <span style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; opacity: 0.5; display: block; margin-bottom: 0.5rem;">Customer Tags</span>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.375rem;">
                             @if(is_array($this->activeConversation->customer->tags) && count($this->activeConversation->customer->tags) > 0)
                                 @foreach($this->activeConversation->customer->tags as $tag)
                                     <x-filament::badge color="info" size="xs">
@@ -153,23 +315,29 @@
                                     </x-filament::badge>
                                 @endforeach
                             @else
-                                <span class="text-gray-400 italic text-xs">No tags extracted yet</span>
+                                <span style="font-size: 0.75rem; font-style: italic; opacity: 0.5;">No tags extracted yet</span>
                             @endif
                         </div>
                     </div>
 
-                    <div class="pt-4 border-t border-gray-200 dark:border-gray-800">
-                        <span class="text-gray-500 block text-[10px] uppercase tracking-wider font-bold mb-2">System Info</span>
-                        <div class="text-[11px] text-gray-500 space-y-1.5">
-                            <p class="flex justify-between"><span>First seen:</span> <span class="font-medium text-gray-700 dark:text-gray-300">{{ $this->activeConversation->customer->first_interaction_at?->format('d M Y') ?? '-' }}</span></p>
-                            <p class="flex justify-between"><span>Channel:</span> <span class="font-medium text-gray-700 dark:text-gray-300">{{ $this->activeConversation->whatsappAccount->phone_number ?? '-' }}</span></p>
+                    <div style="border-top: 1px solid rgba(0,0,0,0.05); padding-top: 1rem;">
+                        <span style="font-size: 0.65rem; text-transform: uppercase; font-weight: 700; opacity: 0.5; display: block; margin-bottom: 0.5rem;">System Info</span>
+                        <div style="font-size: 0.75rem; opacity: 0.7; display: flex; flex-direction: column; gap: 0.375rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>First seen:</span>
+                                <span style="font-weight: 600;">{{ $this->activeConversation->customer->first_interaction_at?->format('d M Y') ?? '-' }}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Channel:</span>
+                                <span style="font-weight: 600;">{{ $this->activeConversation->whatsappAccount->phone_number ?? '-' }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             @else
-                <div class="flex h-full items-center justify-center text-gray-400 text-center flex-col gap-3">
-                    <x-heroicon-o-document-text class="w-8 h-8 opacity-50" />
-                    <p class="text-xs">Context will appear here</p>
+                <div class="chat-placeholder">
+                    <x-heroicon-o-document-text style="width: 3rem; height: 3rem; opacity: 0.2; margin-bottom: 1rem;" />
+                    <p style="font-size: 0.875rem;">Context will appear here</p>
                 </div>
             @endif
         </div>
@@ -189,7 +357,9 @@
             scrollToBottom();
             
             Livewire.hook('morph.updated', (el, component) => {
-                scrollToBottom();
+                if (el.id === 'chat-messages' || (el.querySelector && el.querySelector('#chat-messages'))) {
+                    setTimeout(scrollToBottom, 50);
+                }
             });
         });
     </script>

@@ -34,18 +34,11 @@
             opacity: 0.9;
         }
         
-        /* Scanline effect for realism */
-        .cctv-scanlines {
+        /* subtle vignette instead of scanlines (cleaner) */
+        .cctv-vignette {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.1) 50%,
-                rgba(0,0,0,0.1)
-            );
-            background-size: 100% 4px;
+            background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.6) 100%);
             pointer-events: none;
             z-index: 1;
         }
@@ -140,20 +133,37 @@
     </div>
     
     @php
-        $campingImages = [
-            asset('images/cctv/cctv_glamping_1786524341566.jpg'),
-            asset('images/cctv/cctv_camping_b.jpg'),
-            asset('images/cctv/cctv_parking_lot.jpg'),
-            asset('images/cctv/cctv_gerbang_1786524324305.jpg'),
-            asset('images/cctv/cctv_resepsionis_1786524352663.jpg')
-        ];
+        function getRealisticCctvImage($name) {
+            $name = strtolower($name);
+            if (str_contains($name, 'gerbang') || str_contains($name, 'masuk')) {
+                return asset('images/cctv/cctv_gerbang_1786524324305.jpg');
+            } elseif (str_contains($name, 'parkir')) {
+                return asset('images/cctv/cctv_parking_lot.jpg');
+            } elseif (str_contains($name, 'glamping')) {
+                return asset('images/cctv/cctv_glamping_1786524341566.jpg');
+            } elseif (str_contains($name, 'camping')) {
+                return asset('images/cctv/cctv_camping_b.jpg');
+            } elseif (str_contains($name, 'resepsionis') || str_contains($name, 'loket')) {
+                return asset('images/cctv/cctv_resepsionis_1786524352663.jpg');
+            }
+            
+            // Fallbacks
+            $fallbacks = [
+                asset('images/cctv/cctv_glamping_1786524341566.jpg'),
+                asset('images/cctv/cctv_camping_b.jpg'),
+                asset('images/cctv/cctv_parking_lot.jpg'),
+                asset('images/cctv/cctv_gerbang_1786524324305.jpg'),
+                asset('images/cctv/cctv_resepsionis_1786524352663.jpg')
+            ];
+            return $fallbacks[crc32($name) % count($fallbacks)];
+        }
     @endphp
 
     <div class="live-grid-container">
         @foreach($cameras as $index => $cctv)
             <div class="cctv-card-large">
-                <div class="cctv-scanlines"></div>
-                <img src="{{ $cctv->thumbnail_url ?? $campingImages[$index % count($campingImages)] }}" alt="{{ $cctv->name }}" style="opacity: {{ $cctv->status === 'offline' ? '0.3' : '1.0' }}; filter: {{ $cctv->status === 'offline' ? 'grayscale(100%)' : 'contrast(1.1) saturate(1.1)' }};">
+                <div class="cctv-vignette"></div>
+                <img src="{{ getRealisticCctvImage($cctv->name) }}" alt="{{ $cctv->name }}" style="opacity: {{ $cctv->status === 'offline' ? '0.4' : '1.0' }}; filter: {{ $cctv->status === 'offline' ? 'grayscale(100%)' : 'contrast(1.05) saturate(1.1)' }};">
                 
                 @if($cctv->status === 'active')
                     <div class="live-badge-large">

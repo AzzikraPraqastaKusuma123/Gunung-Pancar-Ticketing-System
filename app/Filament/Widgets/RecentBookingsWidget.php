@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class RecentBookingsWidget extends TableWidget
 {
@@ -39,7 +40,10 @@ class RecentBookingsWidget extends TableWidget
             ->columns([
                 Tables\Columns\TextColumn::make('customer_name')->label('Pelanggan')->searchable(),
                 Tables\Columns\TextColumn::make('customer_phone')->label('Telepon')->searchable(),
-                Tables\Columns\TextColumn::make('activity_type')->label('Paket Dasar')->badge(),
+                Tables\Columns\TextColumn::make('items.category')
+                    ->label('Paket Dasar')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => str_replace('_', ' ', Str::title($state))),
                 Tables\Columns\TextColumn::make('booking_date')->label('Tgl Pesan')->date(),
                 Tables\Columns\TextColumn::make('total_price')->label('Total Harga')
                     ->money('IDR', locale: 'id'),

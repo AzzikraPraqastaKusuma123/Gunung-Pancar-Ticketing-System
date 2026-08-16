@@ -1,19 +1,78 @@
 <x-filament-panels::page>
+    @php
+        function getRealisticCctvImage($name) {
+            $name = strtolower($name);
+            if (str_contains($name, 'gerbang') || str_contains($name, 'masuk')) {
+                return asset('images/cctv/cctv_gerbang_1786524324305.jpg');
+            } elseif (str_contains($name, 'parkir')) {
+                return asset('images/cctv/cctv_parking_lot.jpg');
+            } elseif (str_contains($name, 'glamping')) {
+                return asset('images/cctv/cctv_glamping_1786524341566.jpg');
+            } elseif (str_contains($name, 'camping')) {
+                return asset('images/cctv/cctv_camping_b.jpg');
+            } elseif (str_contains($name, 'resepsionis') || str_contains($name, 'loket')) {
+                return asset('images/cctv/cctv_resepsionis_1786524352663.jpg');
+            }
+            
+            // Fallbacks
+            $fallbacks = [
+                asset('images/cctv/cctv_glamping_1786524341566.jpg'),
+                asset('images/cctv/cctv_camping_b.jpg'),
+                asset('images/cctv/cctv_parking_lot.jpg'),
+                asset('images/cctv/cctv_gerbang_1786524324305.jpg'),
+                asset('images/cctv/cctv_resepsionis_1786524352663.jpg')
+            ];
+            return $fallbacks[crc32($name) % count($fallbacks)];
+        }
+    @endphp
+
     <div class="cctv-page-header">
         <div>
             <h2>
                 <x-filament::icon icon="heroicon-s-video-camera" class="cctv-header-icon" />
                 Live CCTV Monitoring
             </h2>
-            <p>Pantau seluruh area secara real-time dari Command Center.</p>
+            <p>Pantau seluruh area Outbound & Camping secara real-time dari Command Center.</p>
         </div>
         <div class="cctv-header-actions">
-            <x-filament::button color="gray" icon="heroicon-m-funnel">
+            <div class="layout-switcher">
+                <button class="active"><x-filament::icon icon="heroicon-m-squares-2x2" /></button>
+                <button><x-filament::icon icon="heroicon-m-queue-list" /></button>
+                <button><x-filament::icon icon="heroicon-m-rectangle-group" /></button>
+            </div>
+            <x-filament::button color="success" icon="heroicon-m-funnel">
                 Filter Area
             </x-filament::button>
-            <x-filament::button icon="heroicon-m-arrows-pointing-out">
-                Grid Matrix 4x4
-            </x-filament::button>
+        </div>
+    </div>
+
+    <!-- Status Summary Bar -->
+    <div class="cctv-summary-bar">
+        <div class="summary-item">
+            <div class="summary-icon bg-success-soft text-success"><x-filament::icon icon="heroicon-s-video-camera" /></div>
+            <div class="summary-text">
+                <span class="value">{{ count($this->getActiveCctvs()) }}</span>
+                <span class="label">Kamera Aktif</span>
+            </div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-icon bg-danger-soft text-danger"><x-filament::icon icon="heroicon-s-video-camera-slash" /></div>
+            <div class="summary-text">
+                <span class="value">2</span>
+                <span class="label">Offline</span>
+            </div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-icon bg-warning-soft text-warning"><x-filament::icon icon="heroicon-s-exclamation-triangle" /></div>
+            <div class="summary-text">
+                <span class="value">1</span>
+                <span class="label">Peringatan</span>
+            </div>
+        </div>
+        <div class="summary-item" style="margin-left: auto;">
+            <div class="summary-status">
+                <span class="ping-dot"></span> System Normal
+            </div>
         </div>
     </div>
 
@@ -22,17 +81,9 @@
             <div class="cctv-card">
                 <div class="cctv-video-container">
                     @php
-                        $fallbackImages = [
-                            'https://images.unsplash.com/photo-1448375240586-882707db888b?q=85&w=900&auto=format&fit=crop', // Gerbang/Jalan masuk
-                            'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?q=85&w=900&auto=format&fit=crop', // Parkir/Outdoor mobil
-                            'https://images.unsplash.com/photo-1478827387698-1527781a4887?q=85&w=900&auto=format&fit=crop', // Glamping/Tenda
-                            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=85&w=900&auto=format&fit=crop', // Camping
-                            'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?q=85&w=900&auto=format&fit=crop', // Taman
-                        ];
-                        $imgSrc = $cctv->thumbnail_url ?: $fallbackImages[$loop->index % count($fallbackImages)];
-                        $fallbackSrc = $fallbackImages[$loop->index % count($fallbackImages)];
+                        $imgSrc = getRealisticCctvImage($cctv->name);
                     @endphp
-                    <img src="{{ $imgSrc }}" onerror="this.src='{{ $fallbackSrc }}'" alt="{{ $cctv->name }}" class="cctv-img" />
+                    <img src="{{ $imgSrc }}" alt="{{ $cctv->name }}" class="cctv-img" />
                     
                     <div class="cctv-badge-cam">
                         {{ $cctv->type == 'cctv' ? 'CAM' : 'DEV' }}-{{ str_pad($cctv->id, 3, '0', STR_PAD_LEFT) }}
@@ -96,7 +147,7 @@
             color: #fff;
             display: flex;
             align-items: center;
-            text-shadow: 0 0 15px rgba(255,255,255,0.1);
+            text-shadow: 0 0 15px rgba(34,197,94,0.3);
             margin: 0;
         }
 
@@ -104,7 +155,7 @@
             width: 32px;
             height: 32px;
             margin-right: 8px;
-            color: #10b981;
+            color: #22c55e;
         }
 
         .cctv-page-header p {
@@ -116,6 +167,118 @@
         .cctv-header-actions {
             display: flex;
             gap: 12px;
+            align-items: center;
+        }
+        
+        .layout-switcher {
+            display: flex;
+            background: rgba(10, 31, 18, 0.7);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .layout-switcher button {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .layout-switcher button svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .layout-switcher button.active, .layout-switcher button:hover {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+        
+        /* Summary Bar */
+        .cctv-summary-bar {
+            display: flex;
+            gap: 20px;
+            background: rgba(10, 31, 18, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+        
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .summary-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .summary-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .bg-success-soft { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+        .bg-danger-soft { background: rgba(220, 38, 38, 0.15); color: #f87171; }
+        .bg-warning-soft { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        
+        .summary-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .summary-text .value {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+        }
+        
+        .summary-text .label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        
+        .summary-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4ade80;
+            font-weight: 600;
+            font-size: 0.875rem;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .ping-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e;
+            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        
+        @keyframes ping {
+            75%, 100% { transform: scale(2); opacity: 0; }
         }
 
         .cctv-grid {
@@ -130,10 +293,10 @@
 
         .cctv-card {
             position: relative;
-            background: rgba(17, 24, 39, 0.8);
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 31, 18, 0.7);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(34, 197, 94, 0.15);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -143,8 +306,8 @@
 
         .cctv-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
-            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.5);
         }
 
         .cctv-video-container {
@@ -271,7 +434,7 @@
         .cctv-meta-icon {
             width: 12px;
             height: 12px;
-            color: #34d399;
+            color: #22c55e;
         }
 
         .cctv-video-meta span {
@@ -301,7 +464,7 @@
 
         .cctv-card-footer {
             padding: 12px 16px;
-            background: rgba(17, 24, 39, 0.5);
+            background: rgba(5, 15, 8, 0.8);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -314,7 +477,7 @@
             gap: 6px;
             font-size: 0.75rem;
             font-weight: 500;
-            color: #34d399;
+            color: #4ade80;
         }
 
         .cctv-footer-icon {
@@ -346,8 +509,8 @@
         }
 
         .cctv-footer-actions button:hover {
-            color: #10b981;
-            background: rgba(16, 185, 129, 0.1);
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.15);
         }
 
         .cctv-empty-state {

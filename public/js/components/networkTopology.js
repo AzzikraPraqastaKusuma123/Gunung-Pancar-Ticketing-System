@@ -6,12 +6,12 @@ function renderNetworkTopology() {
     const style = document.createElement('style');
     style.textContent = `
         :root {
-            --topo-primary: #0ea5e9;
+            --topo-primary: #10b981;
             --topo-danger: #ef4444;
             --topo-warning: #f59e0b;
-            --topo-bg: #020617;
-            --topo-card-bg: rgba(15, 23, 42, 0.85);
-            --topo-border: rgba(14, 165, 233, 0.2);
+            --topo-bg: #050e09;
+            --topo-card-bg: rgba(6, 20, 12, 0.85);
+            --topo-border: rgba(16, 185, 129, 0.2);
         }
 
         .topo-dashboard-grid {
@@ -41,28 +41,13 @@ function renderNetworkTopology() {
             background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
         }
 
-        /* Tech Grid Overlay */
+        /* Topographic / Clean Dot Grid Overlay */
         .topo-area::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: 
-                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Glowing center effect */
-        .topo-area::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 400px; height: 400px;
-            transform: translate(-50%, -50%);
-            background: radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%);
-            border-radius: 50%;
+            background-image: radial-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
             pointer-events: none;
             z-index: 1;
         }
@@ -74,20 +59,14 @@ function renderNetworkTopology() {
         }
         
         .topo-line {
-            stroke: rgba(14, 165, 233, 0.5);
+            stroke: rgba(16, 185, 129, 0.5);
             stroke-width: 2;
-            stroke-dasharray: 6, 6;
-            animation: topo-dash 15s linear infinite;
+            stroke-dasharray: 8, 8;
         }
 
         .topo-line.offline {
             stroke: rgba(239, 68, 68, 0.3);
-            animation: none;
             stroke-dasharray: none;
-        }
-
-        @keyframes topo-dash {
-            to { stroke-dashoffset: -1000; }
         }
         
         /* Nodes */
@@ -111,22 +90,22 @@ function renderNetworkTopology() {
         
         .topo-node:hover {
             transform: translate(-50%, -50%) scale(1.05);
-            border-color: #38bdf8;
-            box-shadow: 0 0 35px rgba(14, 165, 233, 0.4);
+            border-color: #34d399;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
             z-index: 20;
         }
 
         .topo-node.dvr {
             border-width: 2px;
-            border-color: rgba(139, 92, 246, 0.6);
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
             min-width: 220px;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(5, 14, 9, 0.95);
         }
         
         .topo-node.dvr:hover {
-            border-color: #a78bfa;
-            box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+            border-color: #10b981;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
         }
 
         .topo-node.offline {
@@ -138,14 +117,14 @@ function renderNetworkTopology() {
         .node-icon-wrapper {
             width: 44px; height: 44px;
             border-radius: 10px;
-            background: rgba(14, 165, 233, 0.1);
+            background: rgba(16, 185, 129, 0.1);
             display: flex; align-items: center; justify-content: center;
             font-size: 1.25rem; color: var(--topo-primary);
         }
 
         .topo-node.dvr .node-icon-wrapper {
-            background: rgba(139, 92, 246, 0.15);
-            color: #a78bfa;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
             font-size: 1.5rem;
         }
 
@@ -185,8 +164,8 @@ function renderNetworkTopology() {
         <div class="topo-dashboard-grid">
             <div class="topo-wrapper">
                 <div class="topo-header">
-                    <h2 class="topo-title"><div class="pulse-dot"></div> Live Network Topology</h2>
-                    <div class="topo-subtitle">DATA CENTER MAPPING & ROUTING</div>
+                    <h2 class="topo-title"><div class="pulse-dot"></div> Peta Pemantauan Area</h2>
+                    <div class="topo-subtitle">SISTEM CCTV & POS PANTAU GUNUNG PANCAR</div>
                 </div>
                 
                 <div class="topo-area" id="topo-area">
@@ -258,7 +237,7 @@ function renderNetworkTopology() {
         const renderNodeHTML = (node) => {
             const isDvr = node.type === 'dvr';
             const isOffline = node.status === 'offline';
-            const icon = isDvr ? 'fa-server' : 'fa-video';
+            const icon = isDvr ? 'fa-campground' : 'fa-camera';
             const statusText = isOffline ? 'OFFLINE' : 'ONLINE';
             const statusClass = isOffline ? 'status-offline' : 'status-active';
             

@@ -26,7 +26,8 @@ use App\Http\Controllers\CheckInController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/scanner', [CheckInController::class, 'scanner'])->name('scanner');
-    Route::get('/api/tickets/validate/{ticketNumber}', [CheckInController::class, 'validateTicket'])->name('api.tickets.validate');
+    Route::post('/api/tickets/validate/{ticketNumber}', [CheckInController::class, 'validateTicket'])->name('api.tickets.validate');
+    Route::get('/api/tickets/validate/{ticketNumber}', [CheckInController::class, 'validateTicketGet'])->name('api.tickets.validate.get');
     Route::get('/tickets/{ticket}/print', [CheckInController::class, 'printTicket'])->name('ticket.print');
     Route::get('/tickets/{ticket}/print-manual', [CheckInController::class, 'printManualTicket'])->name('ticket.print_manual');
 });

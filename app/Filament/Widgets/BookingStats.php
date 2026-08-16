@@ -75,46 +75,38 @@ class BookingStats extends BaseWidget
         $totalRevenue = $queryRevenue->sum('total_price');
         $ticketsScanned = $queryTickets->count();
 
-        // Format revenue short (e.g., 1.295.000 -> 1,29 Jt) for mobile
+        // Format revenue short (e.g., 1.295.000 -> 1,29 Jt) for both mobile & desktop
         if ($totalRevenue >= 1000000) {
-            $shortRevenue = number_format($totalRevenue / 1000000, 1, ',', '.') . ' Jt';
+            $formattedRevenue = 'Rp ' . number_format($totalRevenue / 1000000, 1, ',', '.') . ' Jt';
         } elseif ($totalRevenue >= 1000) {
-            $shortRevenue = number_format($totalRevenue / 1000, 0, ',', '.') . ' Rb';
+            $formattedRevenue = 'Rp ' . number_format($totalRevenue / 1000, 0, ',', '.') . ' Rb';
         } else {
-            $shortRevenue = 'Rp ' . $totalRevenue;
+            $formattedRevenue = 'Rp ' . number_format($totalRevenue, 0, ',', '.');
         }
 
-        // Format revenue full (e.g., Rp 3.200.000) for desktop
-        $fullRevenue = 'Rp ' . number_format($totalRevenue, 0, ',', '.');
-        
         $responsiveRevenue = new \Illuminate\Support\HtmlString('
-            <style>
-                .rev-full { display: none; }
-                .rev-short { display: inline; }
-                @media (min-width: 768px) {
-                    .rev-full { display: inline; }
-                    .rev-short { display: none; }
-                }
-            </style>
-            <span class="rev-full" style="white-space: nowrap;">' . $fullRevenue . '</span>
-            <span class="rev-short" style="white-space: nowrap;">' . $shortRevenue . '</span>
+            <span class="text-2xl font-bold" style="white-space: nowrap;">' . $formattedRevenue . '</span>
         ');
 
         return [
-            Stat::make('Pemesanan', $totalBookings)
-                ->description('Total')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->chart([7, 2, 10, 3, 15, 4, 17])
+            Stat::make('Pengunjung', $ticketsScanned)
+                ->description('Hadir / Check-in')
+                ->descriptionIcon('heroicon-m-users')
                 ->color('success'),
+
+            Stat::make('Reservasi', $totalBookings)
+                ->description($periodLabel)
+                ->descriptionIcon('heroicon-m-calendar-days')
+                ->color('info'),
                 
             Stat::make('Pendapatan', $responsiveRevenue)
-                ->description('Lunas')
+                ->description($periodLabel)
                 ->descriptionIcon('heroicon-m-currency-dollar')
                 ->color('primary'),
                 
-            Stat::make('Pengunjung', $ticketsScanned)
-                ->description('Hadir')
-                ->descriptionIcon('heroicon-m-users')
+            Stat::make('Leads / Prospek', \App\Models\Lead::count())
+                ->description('Total Prospek')
+                ->descriptionIcon('heroicon-m-sparkles')
                 ->color('warning'),
         ];
     }
@@ -122,10 +114,10 @@ class BookingStats extends BaseWidget
     protected function getColumns(): int | array | null
     {
         return [
-            'default' => 3,
-            'sm' => 3,
-            'md' => 3,
-            'xl' => 3,
+            'default' => 2,
+            'sm' => 2,
+            'md' => 4,
+            'xl' => 4,
         ];
     }
 }

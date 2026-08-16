@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class SalesMetricsWidget extends ChartWidget
 {
 
-    protected ?string $heading = 'Grafik Pertumbuhan Prospek (Leads)';
+    protected ?string $heading = 'Grafik Pertumbuhan Prospek';
     protected static ?int $sort = 2;
     protected ?string $maxHeight = '250px';
 

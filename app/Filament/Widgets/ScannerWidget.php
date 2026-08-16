@@ -10,7 +10,7 @@ class ScannerWidget extends Widget
 {
 
     protected string $view = 'filament.widgets.scanner-widget';
-    protected static ?int $sort = -2;
+    protected static ?int $sort = 8;
     
     public function getColumnSpan(): int | string | array
     {

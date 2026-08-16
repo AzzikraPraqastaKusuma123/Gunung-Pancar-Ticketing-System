@@ -105,7 +105,7 @@ class BookingBarChartWidget extends ChartWidget
                 [
                     'label' => 'Jumlah Transaksi Lunas',
                     'data' => $data,
-                    'backgroundColor' => '#06b6d4', // Cyan
+                    'backgroundColor' => '#10b981', // Emerald
                     'borderRadius' => 6,
                     'borderSkipped' => false,
                 ],

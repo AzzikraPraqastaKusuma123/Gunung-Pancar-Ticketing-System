@@ -10,6 +10,11 @@ class Dashboard extends \Filament\Pages\Dashboard
 {
     use HasFiltersForm;
 
+    public function getHeading(): string
+    {
+        return '';
+    }
+
     public function filtersForm(Schema $schema): Schema
     {
         return $schema
@@ -36,5 +41,19 @@ class Dashboard extends \Filament\Pages\Dashboard
             'md' => 2,
             'xl' => 2,
         ];
+    }
+
+    public function getHeaderWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\WelcomeBannerWidget::class,
+        ];
+    }
+
+    public function getWidgets(): array
+    {
+        $widgets = parent::getWidgets();
+        // Hapus WelcomeBannerWidget dari widget utama (bawah filter) karena sudah di atas
+        return array_filter($widgets, fn (string $widget): bool => $widget !== \App\Filament\Widgets\WelcomeBannerWidget::class);
     }
 }

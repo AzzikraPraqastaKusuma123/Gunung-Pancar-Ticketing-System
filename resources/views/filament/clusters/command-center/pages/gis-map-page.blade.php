@@ -4,25 +4,48 @@
         <!-- The JS component will render here -->
     </div>
     <script>
-        // Mock the Store object expected by pemetaanJaringan.js
+        // Store object: getData membaca dari PHP/DB, addNetworkNode membuka Filament action
         window.Store = {
             getData: function() {
                 return {
                     network_nodes: {!! $this->getDevices() !!}
                 };
             },
+            // Alih-alih menyimpan hanya di memori JS, buka Filament modal form yang terhubung ke DB
             addNetworkNode: function(node) {
-                // mock adding logic or keep it empty if just visual
-                return Object.assign({id: Math.random()}, node);
+                // Trigger Livewire event untuk membuka Filament action 'tambah_cctv'
+                window.dispatchEvent(new CustomEvent('filament-open-tambah-cctv'));
+                // Kembalikan node sementara agar UI tidak error (data asli di-reload setelah save)
+                return Object.assign({ id: 'pending-' + Date.now() }, node);
             }
         };
         window.isViewer = false;
+
+        // Listener untuk tombol "Tambah CCTV" di dalam petaMonitoring.js
+        // Mengarahkan ke Filament action yang benar-benar menyimpan ke DB
+        window.addEventListener('filament-open-tambah-cctv', function() {
+            // Dispatch Livewire event untuk membuka action modal di GisMapPage
+            if (typeof Livewire !== 'undefined') {
+                Livewire.dispatch('open-tambah-cctv');
+            }
+        });
+        
+        window.addEventListener('filament-open-detail-cctv', function(e) {
+            if (typeof Livewire !== 'undefined') {
+                Livewire.dispatch('open-detail-cctv', { deviceId: e.detail.id });
+            }
+        });
     </script>
-    <script src="{{ asset('js/components/pemetaanJaringan.js') }}?v={{ time() }}"></script>
+    {{-- PERBAIKAN: Pakai petaMonitoring.js (bukan pemetaanJaringan.js) dan panggil renderPetaMonitoring() --}}
+    <script src="{{ asset('js/components/petaMonitoring.js') }}?v={{ time() }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('app-map');
-            if(typeof renderPemetaanJaringan === 'function') {
+            if(typeof renderPetaMonitoring === 'function') {
+                const component = renderPetaMonitoring();
+                container.appendChild(component);
+            } else if(typeof renderPemetaanJaringan === 'function') {
+                // fallback ke versi lama jika ada
                 const component = renderPemetaanJaringan();
                 container.appendChild(component);
             }
@@ -30,7 +53,7 @@
 
         document.addEventListener('livewire:initialized', () => {
             Livewire.on('device-added', () => {
-                // Refresh the page to load the new device from the database
+                // Reload halaman setelah device baru disimpan ke DB via Filament action
                 window.location.reload();
             });
         });

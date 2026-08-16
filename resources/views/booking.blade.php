@@ -12,16 +12,20 @@
             theme: {
                 extend: {
                     colors: {
+                        forest: { 50: '#f0fdf4', 200: '#bbf7d0', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 950: '#052e16' },
+                        night: { base: '#020804', 700: '#1a4228', 800: '#112b18', 900: '#0a1f12', 950: '#050f08' },
+                        gold: { 100: '#fef3c7', 400: '#fbbf24', 500: '#f59e0b', 700: '#b45309', 900: '#78350f' },
+                        earth: { 50: '#faf9f8', 100: '#f5f5f4', 300: '#d6d3d1', 500: '#78716c', 700: '#44403c', 950: '#0c0a09' },
                         brand: {
-                            bg: '#F5F3EB',
+                            bg: '#faf9f8', // earth-50
                             card: '#FFFFFF',
-                            text: '#3A4933',
-                            green: '#455A42',
-                            greenHover: '#324330',
-                            badgeBg: '#E5E9DF',
-                            badgeText: '#455A42',
-                            border: '#E8E4D9',
-                            muted: '#7A8075'
+                            text: '#0c0a09', // earth-950
+                            green: '#22c55e', // forest-500
+                            greenHover: '#16a34a', // forest-600
+                            badgeBg: '#f0fdf4', // forest-50
+                            badgeText: '#15803d', // forest-700
+                            border: '#d6d3d1', // earth-300
+                            muted: '#78716c' // earth-500
                         }
                     },
                     fontFamily: {
@@ -32,7 +36,7 @@
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F5F3EB; color: #3A4933; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #faf9f8; color: #0c0a09; }
         [x-cloak] { display: none !important; }
         
         /* Floating Labels */
@@ -94,16 +98,16 @@
             transition: all 0.2s;
         }
         .qty-btn-minus {
-            background-color: #F5F3EB;
-            color: #455A42;
-            border: 1px solid #E8E4D9;
+            background-color: #faf9f8;
+            color: #15803d;
+            border: 1px solid #d6d3d1;
         }
         .qty-btn-plus {
-            background-color: #455A42;
+            background-color: #22c55e;
             color: #FFFFFF;
         }
-        .qty-btn-minus:hover { background-color: #E5E9DF; }
-        .qty-btn-plus:hover { background-color: #324330; }
+        .qty-btn-minus:hover { background-color: #f0fdf4; }
+        .qty-btn-plus:hover { background-color: #16a34a; }
     </style>
 </head>
 <body class="antialiased pb-mobile-sticky">
@@ -125,6 +129,35 @@
         <div class="mb-10">
             <h1 class="text-3xl md:text-5xl font-extrabold mb-3 tracking-tight">Pilih Paket Wisata</h1>
             <p class="text-brand-muted text-lg md:text-xl font-medium">Jelajahi keindahan alam Gunung Pancar dengan berbagai pilihan paket yang tersedia.</p>
+        </div>
+
+        <!-- Booking Stepper -->
+        <div class="mb-12 mt-6 max-w-3xl mx-auto">
+            <div class="flex items-center justify-between relative">
+                <div class="absolute left-0 top-5 -translate-y-1/2 w-full h-1 bg-brand-border z-0"></div>
+                <div class="absolute left-0 top-5 -translate-y-1/2 w-1/3 h-1 bg-brand-green z-0"></div>
+                
+                <div class="relative z-10 flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full bg-brand-green text-white font-bold flex items-center justify-center shadow-md shadow-brand-green/30 ring-4 ring-brand-bg">
+                        1
+                    </div>
+                    <span class="text-sm font-bold mt-2 text-brand-green">Pilih Paket</span>
+                </div>
+                
+                <div class="relative z-10 flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full bg-brand-card border-2 border-brand-border text-brand-muted font-bold flex items-center justify-center ring-4 ring-brand-bg">
+                        2
+                    </div>
+                    <span class="text-sm font-bold mt-2 text-brand-muted">Pembayaran</span>
+                </div>
+                
+                <div class="relative z-10 flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full bg-brand-card border-2 border-brand-border text-brand-muted font-bold flex items-center justify-center ring-4 ring-brand-bg">
+                        3
+                    </div>
+                    <span class="text-sm font-bold mt-2 text-brand-muted">E-Ticket</span>
+                </div>
+            </div>
         </div>
 
         @if(session('error'))

@@ -12,8 +12,8 @@ function renderPetaMonitoring() {
         }
 
         .map-dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
             margin-bottom: 20px;
         }
@@ -24,9 +24,14 @@ function renderPetaMonitoring() {
             gap: 20px;
         }
 
+        @media (max-width: 1200px) {
+            /* No change needed for map-dashboard-grid as it is flex column */
+        }
+
         @media (max-width: 1024px) {
             .grid-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
             .bottom-dashboard-grid { grid-template-columns: 1fr 1fr; }
+            .live-cctv-grid { grid-template-columns: 1fr 1fr !important; }
         }
 
         @media (max-width: 768px) {
@@ -61,7 +66,7 @@ function renderPetaMonitoring() {
             position: relative;
             background-image: 
                 radial-gradient(circle at 50% 50%, rgba(20, 40, 25, 0.4) 0%, transparent 70%),
-                url('https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=1000&auto=format&fit=crop');
+                url('/images/camping_map_topdown.jpg');
             background-size: cover;
             background-position: center;
             background-blend-mode: overlay;
@@ -217,56 +222,119 @@ function renderPetaMonitoring() {
 
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        .stat-card-modern {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
+        .cctv-sidebar {
+            background: var(--bg-card); border-radius: var(--radius-lg, 16px);
             border: 1px solid var(--border-color);
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-width: 0;
-            overflow: hidden;
+            padding: 24px; display: flex; flex-direction: column; gap: 16px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
-        .stat-card-modern .info h4 {
-            font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; font-weight: 500;
+        .cctv-header {
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .stat-card-modern .info .val {
-            font-size: 1.6rem; font-weight: 700; color: var(--text-main);
+        .cctv-header h3 {
+            font-size: 1.1rem; font-weight: 700; color: white; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 8px; margin: 0;
         }
 
-        .stat-card-modern .info .sub {
-            font-size: 0.7rem; color: var(--text-muted);
+        .live-cctv-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
         }
-
-        .stat-card-modern .icon-circle {
-            width: 48px; height: 48px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        }
-
-        .list-activity {
-            list-style: none; padding: 0; margin: 0;
-        }
-        .list-activity li {
-            display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem;
-        }
-        .list-activity li:last-child { border-bottom: none; }
-        .list-activity .time { color: var(--text-muted); font-family: monospace; width: 40px; }
-        .list-activity .area { font-weight: 600; width: 120px; }
-        .list-activity .desc { color: var(--text-muted); flex: 1; }
         
-        .progress-bar-container { margin-bottom: 12px; }
-        .progress-bar-container .top { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px; }
-        .progress-bar-container .bar-bg { width: 100%; height: 6px; background: var(--bg-main); border-radius: 3px; overflow: hidden; }
-        .progress-bar-container .bar-fill { height: 100%; background: var(--primary); border-radius: 3px; }
+        .cctv-card {
+            position: relative; background: #000; border-radius: 12px;
+            aspect-ratio: 16/10; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s; cursor: pointer;
+        }
+
+        .cctv-card:hover { transform: translateY(-2px); border-color: var(--primary); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2); }
+        .cctv-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s; }
+        .cctv-card:hover img { opacity: 1; }
+
+        .cctv-card::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)); pointer-events: none;
+        }
+
+        .cctv-card .c-label {
+            position: absolute; bottom: 8px; left: 10px; right: 10px;
+            font-size: 0.7rem; color: white; font-weight: 600; z-index: 2;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        .cctv-card .c-badge {
+            position: absolute; top: 8px; right: 8px;
+            font-size: 0.55rem; background: rgba(239, 68, 68, 0.8);
+            padding: 2px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 1px;
+            animation: pulse-badge 2s infinite; color: white;
+        }
+
+        @keyframes pulse-badge { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* Stats Cards inside Bottom Dashboard */
+        .b-card {
+            background: var(--bg-card); border-radius: var(--radius-lg, 16px);
+            border: 1px solid var(--border-color);
+            padding: 24px; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .b-card-title {
+            font-size: 0.9rem; font-weight: 700; color: white; letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 12px; display: flex; align-items: center; gap: 8px;
+        }
+
+        .activity-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+        .activity-list li {
+            display: flex; align-items: flex-start; gap: 12px;
+            font-size: 0.85rem; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.05);
+        }
+        .activity-list li:last-child { border-bottom: none; padding-bottom: 0; }
+        .act-time { color: #a1a1aa; font-family: monospace; font-size: 0.75rem; margin-top: 2px; }
+        .act-content { flex: 1; }
+        .act-content strong { color: white; display: block; margin-bottom: 2px; }
+        .act-content span { color: #a1a1aa; }
+        
+        .sys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .sys-item { background: rgba(0,0,0,0.3); padding: 12px 8px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .sys-val { font-size: 1.25rem; font-weight: 800; color: white; margin-bottom: 4px; white-space: nowrap; }
+        .sys-label { font-size: 0.65rem; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; word-wrap: break-word; }
 
         .circular-chart { display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .circle {
             width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             border: 4px solid var(--primary); font-weight: 700; font-size: 1.1rem;
         }
+
+        /* Modal Styles */
+        .global-modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .global-modal-overlay.show {
+            opacity: 1; pointer-events: auto;
+        }
+        .global-modal {
+            background: var(--bg-card); border-radius: var(--radius-lg);
+            width: 100%; border: 1px solid var(--border-color);
+            transform: translateY(20px); transition: transform 0.3s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        .global-modal-overlay.show .global-modal {
+            transform: translateY(0);
+        }
+        .modal-header-g {
+            padding: 16px 24px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-body-g { padding: 24px; }
+        .modal-close-g {
+            background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;
+        }
+        .modal-close-g:hover { color: var(--text-main); }
     `;
     container.appendChild(style);
 
@@ -324,85 +392,109 @@ function renderPetaMonitoring() {
                     <div style="display:flex; align-items:center; gap: 8px; color: var(--text-main);"><i class="fa-solid fa-server" style="color: rgba(255,255,255,0.7);"></i> Mesin DVR Utama</div>
                 </div>
             </div>
-        </div>
-
-
-
-        <!-- Modals -->
-        <div id="add-modal" class="global-modal-overlay">
-            <div class="global-modal" style="max-width: 500px;">
-                <div class="modal-header-g">
-                    <h3>Tambah Perangkat / CCTV Baru</h3>
-                    <button class="modal-close-g" id="close-add-modal"><i class="fa-solid fa-times"></i></button>
+            
+            <!-- Sidebar: Live CCTV Grid -->
+            <div class="cctv-sidebar">
+                <div class="cctv-header">
+                    <h3><i class="fa-solid fa-border-all" style="color: var(--primary);"></i> LIVE FEED</h3>
+                    <a href="#" style="color: var(--primary); font-size: 0.8rem; text-decoration: none; font-weight: 600;">Full Matrix ></a>
                 </div>
-                <div class="modal-body-g">
-                    <div class="form-group">
-                        <label>Nama Perangkat</label>
-                        <input type="text" id="add-name" class="form-control" placeholder="Contoh: CCTV Area Timur">
-                    </div>
-                    <div class="form-group">
-                        <label>Alamat IP / DVR Channel (Analog CCTV)</label>
-                        <input type="text" id="add-ip" class="form-control" placeholder="Contoh: 192.168.1.1 atau CH 01">
-                    </div>
-                    <div class="form-group">
-                        <label>Tipe Perangkat</label>
-                        <select id="add-type" class="form-control">
-                            <option value="cctv">CCTV Camera (Analog)</option>
-                            <option value="dvr">Mesin DVR Utama</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; gap: 16px;">
-                        <div class="form-group" style="flex: 1;">
-                            <label>Koordinat X (%)</label>
-                            <input type="number" id="add-x" class="form-control" value="50" min="0" max="100">
-                        </div>
-                        <div class="form-group" style="flex: 1;">
-                            <label>Koordinat Y (%)</label>
-                            <input type="number" id="add-y" class="form-control" value="50" min="0" max="100">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Hubungkan Ke (Parent)</label>
-                        <select id="add-parent" class="form-control">
-                            <!-- Injected dynamically -->
-                        </select>
-                    </div>
+                <div class="live-cctv-grid" id="sidebar-live-cctv">
+                    <!-- Injected dynamically -->
                 </div>
-                <div style="padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 12px; background: rgba(0,0,0,0.2);">
-                    <button class="btn btn-outline" id="cancel-add">Batal</button>
-                    <button class="btn btn-primary" id="submit-add">Simpan Perangkat</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; background: rgba(16,185,129,0.1); padding: 12px 24px; border-radius: 10px; border: 1px solid rgba(16,185,129,0.2);">
+                    <span style="color: var(--primary); font-size: 0.9rem; font-weight: 600;"><i class="fa-solid fa-shield-halved"></i> Sistem Keamanan Aktif</span>
+                    <span style="color: var(--text-muted); font-size: 0.8rem;">Monitoring 24/7 Gunung Pancar</span>
                 </div>
             </div>
         </div>
 
-        <div id="detail-modal" class="global-modal-overlay">
-            <div class="global-modal" style="max-width: 400px;">
-                <div class="modal-header-g">
-                    <h3 id="detail-title">Detail Perangkat</h3>
-                    <button class="modal-close-g" id="close-detail-modal"><i class="fa-solid fa-times"></i></button>
-                </div>
-                <div class="modal-body-g">
-                    <div style="text-align: center; margin-bottom: 16px;">
-                        <i id="detail-icon" class="fa-solid fa-video" style="font-size: 3rem; color: var(--primary);"></i>
-                        <h3 id="detail-name" style="margin-top: 12px; color: var(--text-main);">Nama Perangkat</h3>
-                        <span id="detail-status" class="badge" style="background: var(--success); margin-top: 8px; display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; color: white; position: static;">Online</span>
+        <div class="bottom-dashboard-grid">
+            <!-- Aktivitas Terakhir -->
+            <div class="b-card">
+                <h3 class="b-card-title"><i class="fa-solid fa-clock-rotate-left" style="color: var(--primary);"></i> Log Aktivitas</h3>
+                <ul class="activity-list">
+                    <li>
+                        <div style="color:var(--primary); font-size: 1.2rem;"><i class="fa-solid fa-person-walking"></i></div>
+                        <div class="act-content"><strong>Sektor Camping B</strong><span>Pergerakan terdeteksi (AI Motion)</span></div>
+                        <div class="act-time">10:42</div>
+                    </li>
+                    <li>
+                        <div style="color:#3b82f6; font-size: 1.2rem;"><i class="fa-solid fa-car"></i></div>
+                        <div class="act-content"><strong>Gerbang Utama</strong><span>Kendaraan B 1234 XYZ masuk</span></div>
+                        <div class="act-time">10:38</div>
+                    </li>
+                    <li>
+                        <div style="color:var(--danger); font-size: 1.2rem;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="act-content"><strong>Area Parkir Sentral</strong><span>Kamera CAM-02 kehilangan sinyal</span></div>
+                        <div class="act-time">10:35</div>
+                    </li>
+                    <li>
+                        <div style="color:var(--warning); font-size: 1.2rem;"><i class="fa-solid fa-hard-drive"></i></div>
+                        <div class="act-content"><strong>Server DVR 01</strong><span>Kapasitas penyimpanan 90%</span></div>
+                        <div class="act-time">10:32</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Status Sistem -->
+            <div class="b-card">
+                <h3 class="b-card-title"><i class="fa-solid fa-server" style="color: #3b82f6;"></i> Kesehatan Server</h3>
+                <div class="sys-grid">
+                    <div class="sys-item">
+                        <div class="sys-val" style="color: var(--primary);">98%</div>
+                        <div class="sys-label">Uptime</div>
                     </div>
-                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
-                        <tr style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 8px 0; color: var(--text-muted);" id="detail-ip-label">IP / Channel</td>
-                            <td style="padding: 8px 0; text-align: right; font-weight: 500;" id="detail-ip">192.168.x.x</td>
-                        </tr>
-                        <tr id="mac-address-row" style="border-bottom: 1px solid var(--border-color);">
-                            <td style="padding: 8px 0; color: var(--text-muted);">MAC Address</td>
-                            <td style="padding: 8px 0; text-align: right; font-weight: 500;" id="detail-mac">00:00:00:00:00</td>
-                        </tr>
-                    </table>
-                    <div id="detail-feed-container" style="margin-top: 16px; display: none;">
-                        <div class="cctv-mini" style="width: 100%;"><img id="detail-feed" src="" alt="Live Feed"><div class="live-badge">LIVE</div></div>
+                    <div class="sys-item">
+                        <div class="sys-val" style="color: var(--warning);">42°C</div>
+                        <div class="sys-label">Suhu CPU</div>
+                    </div>
+                    <div class="sys-item">
+                        <div class="sys-val" style="color: var(--primary);">2.4<span style="font-size: 0.8rem;">Gbps</span></div>
+                        <div class="sys-label">Bandwidth</div>
+                    </div>
+                    <div class="sys-item">
+                        <div class="sys-val" style="color: #3b82f6;">24<span style="font-size: 0.8rem;">ms</span></div>
+                        <div class="sys-label">Latensi Map</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penyimpanan Rekaman -->
+            <div class="b-card">
+                <h3 class="b-card-title" style="justify-content: space-between;">
+                    <span><i class="fa-solid fa-database" style="color: var(--warning);"></i> Manajemen Data</span>
+                    <span style="font-size: 0.7rem; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 6px;">RAID 5</span>
+                </h3>
+                
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; margin-top: 20px;">
+                    <div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: white; line-height: 1;">8.4 <span style="font-size: 1rem; color: #a1a1aa;">TB</span></div>
+                        <div style="font-size: 0.8rem; color: #a1a1aa; margin-top: 4px;">Terpakai dari 16 TB</div>
+                    </div>
+                    <div style="font-size: 1.8rem; font-weight: 700; color: #3b82f6;">52%</div>
+                </div>
+                
+                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
+                    <div style="width: 52%; height: 100%; background: linear-gradient(90deg, #3b82f6, var(--primary)); border-radius: 4px;"></div>
+                </div>
+                
+                <div style="display: flex; gap: 16px;">
+                    <div style="flex: 1; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 0.7rem; color: #a1a1aa; margin-bottom: 4px;">Arsip Tersedia</div>
+                        <div style="font-size: 1.1rem; color: white; font-weight: 700;">180 Hari</div>
+                    </div>
+                    <div style="flex: 1; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 0.7rem; color: #a1a1aa; margin-bottom: 4px;">Backup Cloud</div>
+                        <div style="font-size: 1.1rem; color: var(--primary); font-weight: 700;">Sinkron</div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+
     `;
 
     setTimeout(() => {
@@ -431,6 +523,10 @@ function renderPetaMonitoring() {
             const oldNodes = mapArea.querySelectorAll('.node');
             oldNodes.forEach(n => n.remove());
 
+            const sidebarLive = container.querySelector('#sidebar-live-cctv');
+            if (sidebarLive) sidebarLive.innerHTML = '';
+            let cctvCount = 0;
+
             networkNodes.forEach(node => {
 
                 let iconClass = 'fa-video';
@@ -445,102 +541,40 @@ function renderPetaMonitoring() {
                     <div class="node-label">${node.name}</div>
                 `;
                 
-                nodeEl.addEventListener('click', () => openDetailModal(node));
+                nodeEl.addEventListener('click', () => {
+                    window.dispatchEvent(new CustomEvent('filament-open-detail-cctv', { detail: { id: node.id } }));
+                });
 
                 mapArea.appendChild(nodeEl);
                 
+                if (node.type === 'cctv' && sidebarLive && cctvCount < 4) {
+                    const fallbackImages = [
+                        '/images/cctv/cctv_glamping_1786524341566.jpg',
+                        '/images/cctv/cctv_camping_b.jpg',
+                        '/images/cctv/cctv_parking_lot.jpg',
+                        '/images/cctv/cctv_gerbang_1786524324305.jpg',
+                        '/images/cctv/cctv_resepsionis_1786524352663.jpg'
+                    ];
+                    const fallbackImg = fallbackImages[cctvCount % fallbackImages.length];
+                    const imgSrc = (node.image && node.image.length > 5 && !node.image.includes('fallback')) ? node.image : fallbackImg;
+                    const isLive = node.status === 'active';
+                    sidebarLive.innerHTML += `
+                        <div class="cctv-card" onclick="window.dispatchEvent(new CustomEvent('filament-open-detail-cctv', { detail: { id: ${node.id} } }));">
+                            <img src="${imgSrc}" onerror="this.src='${fallbackImg}'" alt="">
+                            ${isLive ? '<div class="c-badge">REC</div>' : '<div class="c-badge" style="background:#4b5563; animation:none;">OFF</div>'}
+                            <div class="c-label" title="${node.name}">${node.name}</div>
+                        </div>
+                    `;
+                    cctvCount++;
+                }
             });
             
             renderTopologyLines();
         }
 
-        function openDetailModal(node) {
-            const modal = container.querySelector('#detail-modal');
-            modal.querySelector('#detail-title').textContent = 'Detail ' + (node.type === 'cctv' ? 'CCTV Analog' : 'DVR Utama');
-            modal.querySelector('#detail-name').textContent = node.name;
-            modal.querySelector('#detail-ip').textContent = node.ip;
-            modal.querySelector('#detail-mac').textContent = node.mac || 'N/A';
-            
-            if (node.type === 'cctv') {
-                modal.querySelector('#detail-ip-label').textContent = 'DVR Channel';
-                modal.querySelector('#mac-address-row').style.display = 'none';
-            } else {
-                modal.querySelector('#detail-ip-label').textContent = 'IP Address';
-                modal.querySelector('#mac-address-row').style.display = 'table-row';
-            }
-            
-            const icon = modal.querySelector('#detail-icon');
-            icon.className = node.type === 'cctv' ? 'fa-solid fa-video' : 'fa-solid fa-server';
-            icon.style.color = node.status === 'offline' ? 'var(--danger)' : node.status === 'warning' ? 'var(--warning)' : 'var(--success)';
-            
-            const statusBadge = modal.querySelector('#detail-status');
-            statusBadge.textContent = node.status.toUpperCase();
-            statusBadge.style.background = node.status === 'offline' ? 'var(--danger)' : node.status === 'warning' ? 'var(--warning)' : 'var(--success)';
-
-            const feedContainer = modal.querySelector('#detail-feed-container');
-            const feedImg = modal.querySelector('#detail-feed');
-            if (node.type === 'cctv' && node.image) {
-                feedContainer.style.display = 'block';
-                feedImg.src = node.image;
-            } else {
-                feedContainer.style.display = 'none';
-            }
-            modal.classList.add('show');
-        }
-
-        const addModal = container.querySelector('#add-modal');
-        const detailModal = container.querySelector('#detail-modal');
-        
         container.querySelector('#btn-add-device').addEventListener('click', () => {
-            // Populate parent select dynamically
-            const parentSelect = container.querySelector('#add-parent');
-            parentSelect.innerHTML = '<option value="">-- Tanpa Parent (DVR Induk) --</option>';
-            networkNodes.forEach(n => {
-                if(n.type === 'dvr') {
-                    parentSelect.innerHTML += `<option value="${n.id}">${n.name}</option>`;
-                }
-            });
-            addModal.classList.add('show');
-        });
-        
-        container.querySelector('#close-add-modal').addEventListener('click', () => addModal.classList.remove('show'));
-        container.querySelector('#cancel-add').addEventListener('click', () => addModal.classList.remove('show'));
-        container.querySelector('#close-detail-modal').addEventListener('click', () => detailModal.classList.remove('show'));
-
-        container.querySelector('#submit-add').addEventListener('click', () => {
-            const name = container.querySelector('#add-name').value;
-            const ip = container.querySelector('#add-ip').value;
-            const type = container.querySelector('#add-type').value;
-            const x = parseInt(container.querySelector('#add-x').value);
-            const y = parseInt(container.querySelector('#add-y').value);
-            const parent = parseInt(container.querySelector('#add-parent').value);
-
-            if (!name || !ip) {
-                alert('Nama dan IP Address harus diisi!');
-                return;
-            }
-
-            const newNode = {
-                name: name,
-                type: type,
-                status: 'active',
-                x: x,
-                y: y,
-                ip: ip,
-                mac: type === 'cctv' ? null : 'XX:XX:XX:XX:XX:XX',
-                parent: parent,
-                image: type === 'cctv' ? 'images/cctv_gerbang_1786524324305.jpg' : null
-            };
-
-            const addedNode = Store.addNetworkNode(newNode);
-            networkNodes.push(addedNode);
-
-            addModal.classList.remove('show');
-            container.querySelector('#add-name').value = '';
-            container.querySelector('#add-ip').value = '';
-
-            renderNodes();
-            alert('Perangkat berhasil ditambahkan!');
+            // Langsung panggil event untuk trigger Filament Action Modal
+            window.dispatchEvent(new CustomEvent('filament-open-tambah-cctv'));
         });
 
         // 3D Mode Toggle

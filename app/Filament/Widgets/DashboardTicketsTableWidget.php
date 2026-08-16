@@ -9,7 +9,7 @@ use App\Filament\Resources\Tickets\Tables\TicketsTable;
 
 class DashboardTicketsTableWidget extends BaseWidget
 {
-    protected static ?int $sort = 8;
+    protected static ?int $sort = 9;
     
     public function getColumnSpan(): int | string | array
     {

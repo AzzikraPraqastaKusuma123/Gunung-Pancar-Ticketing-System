@@ -10,6 +10,17 @@ class CommandCenterStats extends BaseWidget
 {
     protected ?string $pollingInterval = '10s';
 
+    protected function getColumns(): int | array | null
+    {
+        return [
+            'default' => 2,
+            'sm' => 2,
+            'md' => 2,
+            'lg' => 4,
+            'xl' => 4,
+        ];
+    }
+
     protected function getStats(): array
     {
         $devices = Device::all();

@@ -30,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->profile(\App\Filament\Pages\EditProfile::class)
             ->brandName('TicketBrain')
-            ->brandLogo(fn () => asset('images/logo.jpg'))
+            ->brandLogo(fn () => asset('images/logo_gunung_pancar.png'))
             ->brandLogoHeight('2.5rem')
             ->font('Plus Jakarta Sans', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap')
             ->sidebarCollapsibleOnDesktop()
@@ -38,10 +38,10 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             ->colors([
-                'primary' => \Filament\Support\Colors\Color::hex('#4f46e5'), // Royal Indigo
+                'primary' => \Filament\Support\Colors\Color::Emerald, // Premium Green
                 'danger' => \Filament\Support\Colors\Color::Rose,
-                'gray' => \Filament\Support\Colors\Color::Zinc, // Changed from Slate to Zinc for pure black/gray dark mode
-                'info' => \Filament\Support\Colors\Color::hex('#06b6d4'), // Vibrant Cyan
+                'gray' => \Filament\Support\Colors\Color::Slate, 
+                'info' => \Filament\Support\Colors\Color::Sky, 
                 'success' => \Filament\Support\Colors\Color::Emerald,
                 'warning' => \Filament\Support\Colors\Color::Amber,
             ])
@@ -155,30 +155,43 @@ class AdminPanelProvider extends PanelProvider
                 
                 /* Pull Sidebar Logo to the left so it aligns perfectly with the menu text */
                 .fi-sidebar-header .fi-logo {
-                    margin-left: -0.75rem !important;
+                    margin-left: 0 !important;
+                    justify-content: flex-start !important;
+                    padding-left: 0.25rem !important;
+                }
+                .fi-sidebar-header .fi-logo img {
+                    object-position: left center !important;
                 }
 
                 /* ── APEX-STYLE PREMIUM DARK MODE ── */
                 .dark body, .dark .fi-main {
-                    background-color: #09090b !important; /* Pitch black / ultra dark gray */
+                    background-color: #06110a !important; /* Deep forest dark */
                 }
                 .dark .fi-sidebar {
-                    background-color: #09090b !important;
-                    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+                    background-color: #040d07 !important;
+                    border-right: 1px solid rgba(16, 185, 129, 0.1) !important;
                 }
                 .dark .fi-topbar {
-                    background-color: rgba(9, 9, 11, 0.8) !important;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+                    background-color: rgba(4, 13, 7, 0.8) !important;
+                    border-bottom: 1px solid rgba(16, 185, 129, 0.1) !important;
                     backdrop-filter: blur(12px);
                 }
                 .dark .fi-ta-ctn, .dark .fi-wi-stats-overview-stat, .dark .fi-wi-chart, .dark .fi-section, .dark .fi-dropdown-panel {
-                    background: linear-gradient(145deg, #18181b 0%, #111113 100%) !important;
-                    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+                    background: linear-gradient(145deg, #091f15 0%, #06160e 100%) !important;
+                    border: 1px solid rgba(16, 185, 129, 0.15) !important;
                     box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8) !important;
                     border-radius: 1rem !important;
                 }
                 .dark .fi-ta-header-heading, .dark h1, .dark h2, .dark h3 {
                     color: #f8fafc !important;
+                }
+
+                /* Fix for Sidebar Footer Overlap */
+                .fi-sidebar-nav {
+                    padding-bottom: 6rem !important;
+                }
+                .fi-sidebar-nav-groups, .fi-sidebar-nav > ul {
+                    padding-bottom: 6rem !important;
                 }
                 
                 /* ── DROPDOWN & SELECT SIZING FIX ── */
@@ -278,38 +291,30 @@ class AdminPanelProvider extends PanelProvider
 
                         /* ── DENSE MOBILE GRID OPTIMIZATION (1x3 & 1x2) ── */
                         @media (max-width: 768px) {
-                            /* Stats Overview (1x3) optimizations */
+                            /* Stats Overview optimizations for 2x2 grid */
                             .fi-wi-stats-overview-stat {
-                                padding: 0.75rem 0.25rem !important;
+                                padding: 0.85rem 0.75rem !important;
                                 border-radius: 0.75rem !important;
-                                gap: 0.25rem !important;
-                                display: flex;
-                                flex-direction: column;
-                                align-items: center;
-                                text-align: center;
                             }
                             .fi-wi-stats-overview-stat-label {
-                                font-size: 0.7rem !important;
+                                font-size: 0.75rem !important;
                                 font-weight: 700 !important;
-                                line-height: 1 !important;
+                                line-height: 1.2 !important;
                                 color: #94a3b8 !important;
-                                width: 100%;
                             }
                             .fi-wi-stats-overview-stat-value {
-                                font-size: 1.15rem !important;
+                                font-size: 1.25rem !important;
                                 font-weight: 800 !important;
-                                line-height: 1.1 !important;
-                                margin-top: 0.25rem;
                             }
-                            .fi-wi-stats-overview-stat-description {
-                                font-size: 0.6rem !important;
-                                margin-top: 0.15rem;
-                                justify-content: center !important;
-                                width: 100%;
+                            .fi-wi-stats-overview-stat-description,
+                            .fi-wi-stats-overview-stat-description > * {
+                                font-size: 0.65rem !important;
+                                line-height: 1.2 !important;
+                                white-space: nowrap !important;
                             }
                             .fi-wi-stats-overview-stat-description svg {
-                                height: 0.75rem !important;
-                                width: 0.75rem !important;
+                                height: 0.8rem !important;
+                                width: 0.8rem !important;
                             }
                             .fi-wi-stats-overview-stat-chart {
                                 height: 25px !important;
@@ -354,6 +359,104 @@ class AdminPanelProvider extends PanelProvider
                 fn (): string => Blade::render('
                     <!-- Subtle Mountain Theme Background -->
                     <div style="position: fixed; bottom: 0; left: 0; width: 100%; height: 30vh; pointer-events: none; z-index: -1; opacity: 0.03; mix-blend-mode: overlay; background-image: url(\'data:image/svg+xml;utf8,<svg viewBox=\"0 0 1200 400\" xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"none\"><path fill=\"%23ffffff\" fill-opacity=\"0.3\" d=\"M0 400 L200 150 L350 250 L600 50 L850 300 L1050 200 L1200 350 L1200 400 Z\" /><path fill=\"%23ffffff\" fill-opacity=\"0.6\" d=\"M-100 400 L150 250 L400 350 L650 150 L900 300 L1150 100 L1300 400 Z\" /></svg>\'); background-size: 100% 100%; background-repeat: no-repeat; background-position: bottom;"></div>
+                ')
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::SIDEBAR_FOOTER,
+                fn (): string => Blade::render('
+                    @auth
+                    @php
+                        $user = auth()->user();
+                        $name = $user?->name ?? "User";
+                        $initial = mb_strtoupper(mb_substr($name, 0, 1));
+                        $role = $user?->roles->first()?->name ?? "panel_user";
+                        $roleLabel = match($role) {
+                            "super_admin" => "Superuser",
+                            "sales"       => "Sales",
+                            "ticketing"   => "Ticketing",
+                            "kasir"       => "Kasir",
+                            default       => ucfirst(str_replace("_", " ", $role)),
+                        };
+                        $editUrl = route("filament.admin.auth.profile");
+                    @endphp
+                    <style>
+                        .sb-user-card {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.65rem;
+                            padding: 0.85rem 1rem;
+                            margin: 0.5rem 0.75rem 0.75rem;
+                            background: rgba(4, 13, 7, 0.95);
+                            backdrop-filter: blur(12px);
+                            border: 1px solid rgba(16, 185, 129, 0.3);
+                            border-radius: 0.85rem;
+                            text-decoration: none;
+                            transition: all 0.2s ease;
+                            cursor: pointer;
+                            overflow: hidden;
+                            position: relative;
+                            z-index: 50;
+                            box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+                        }
+                        .sb-user-card:hover {
+                            background: rgba(16, 185, 129, 0.14);
+                            border-color: rgba(16, 185, 129, 0.3);
+                        }
+                        .sb-user-avatar {
+                            width: 36px;
+                            height: 36px;
+                            border-radius: 50%;
+                            background: linear-gradient(135deg, #059669, #10b981);
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 0.9rem;
+                            font-weight: 800;
+                            color: #fff;
+                            flex-shrink: 0;
+                            box-shadow: 0 0 0 2px rgba(16,185,129,0.3);
+                        }
+                        .sb-user-info {
+                            flex: 1;
+                            min-width: 0;
+                        }
+                        .sb-user-name {
+                            font-size: 0.8rem;
+                            font-weight: 700;
+                            color: #f0fdf4;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            line-height: 1.2;
+                        }
+                        .sb-user-role {
+                            font-size: 0.68rem;
+                            color: #6ee7b7;
+                            font-weight: 500;
+                            margin-top: 1px;
+                        }
+                        .sb-user-icon {
+                            color: rgba(110, 231, 183, 0.5);
+                            flex-shrink: 0;
+                        }
+                        .sb-user-icon svg {
+                            width: 14px;
+                            height: 14px;
+                        }
+                    </style>
+                    <a href="{{ $editUrl }}" class="sb-user-card" x-data="{}" x-bind:style="$store.sidebar.isOpen ? \'\' : \'padding: 0.5rem; justify-content: center; background: transparent; border-color: transparent;\'">
+                        <div class="sb-user-avatar">{{ $initial }}</div>
+                        <div class="sb-user-info" x-show="$store.sidebar.isOpen" style="display: none;" x-transition.opacity>
+                            <div class="sb-user-name">{{ $name }}</div>
+                            <div class="sb-user-role">{{ $roleLabel }}</div>
+                        </div>
+                        <span class="sb-user-icon" x-show="$store.sidebar.isOpen" style="display: none;" x-transition.opacity>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                            </svg>
+                        </span>
+                    </a>
+                    @endauth
                 ')
             );
     }

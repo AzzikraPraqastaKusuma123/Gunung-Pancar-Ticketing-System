@@ -26,6 +26,11 @@ class RegistrasiOffline extends Page implements HasForms
     protected static ?string $title = 'Registrasi Tiket';
     protected static ?int $navigationSort = 3;
 
+    public static function canAccess(): bool
+    {
+        return !auth()->user()->hasAnyRole(['security', 'sales']);
+    }
+
     protected string $view = 'filament.pages.registrasi-offline';
 
     public ?array $data = [];

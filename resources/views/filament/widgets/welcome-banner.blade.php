@@ -43,15 +43,22 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(135deg, #0a2218 0%, #061510 60%, #04100a 100%);
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 60%, #a7f3d0 100%);
             border-radius: 1.25rem;
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
             padding: 2rem 2.5rem;
             position: relative;
             overflow: hidden;
             min-height: 180px;
-            box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.1);
             gap: 1.5rem;
+        }
+        
+        .dark .custom-wb-container {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 78, 59, 0.15) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
         }
 
         .custom-wb-bg {
@@ -103,18 +110,26 @@
         .custom-wb-heading {
             font-size: 2.25rem;
             font-weight: 800;
-            color: #f0fdf4;
+            color: #064e3b;
             line-height: 1.1;
             margin: 0 0 0.75rem 0;
             letter-spacing: -0.02em;
         }
+        
+        html.dark .custom-wb-heading, .dark .custom-wb-heading {
+            color: #ecfdf5;
+        }
 
         .custom-wb-subtitle {
             font-size: 0.8rem;
-            color: rgba(110, 231, 183, 0.8);
+            color: #047857;
             line-height: 1.5;
             margin: 0;
             max-width: 500px;
+        }
+        
+        html.dark .custom-wb-subtitle, .dark .custom-wb-subtitle {
+            color: #a7f3d0;
         }
 
         .custom-wb-image-container {

@@ -37,6 +37,16 @@ function renderPetaMonitoring() {
         @media (max-width: 768px) {
             .grid-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .bottom-dashboard-grid { grid-template-columns: 1fr; }
+            .map-view-card { min-height: auto; padding: 12px; }
+            .map-area { aspect-ratio: 1 / 1.2; min-height: auto; }
+            .map-zone { font-size: 0.8rem !important; letter-spacing: 0px !important; border-width: 1px !important; }
+            .node { width: 24px; height: 24px; }
+            .node-icon { font-size: 0.7rem; }
+            .node-label { font-size: 0.6rem; left: 18px; top: -14px; }
+        }
+        @media (max-width: 480px) {
+            .map-area { aspect-ratio: 4 / 5; }
+            .map-zone { font-size: 0.65rem !important; }
         }
 
         /* Improved Scrollbar */
@@ -49,7 +59,7 @@ function renderPetaMonitoring() {
             background: var(--bg-card);
             border-radius: var(--radius-lg, 16px);
             border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow);
             padding: 24px;
             position: relative;
             overflow: hidden;
@@ -74,6 +84,7 @@ function renderPetaMonitoring() {
             border: 1px solid var(--border-color);
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);
             min-height: 400px;
+            aspect-ratio: 16/10;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             transform-origin: bottom center;
         }
@@ -123,29 +134,45 @@ function renderPetaMonitoring() {
         }
         
         .node {
-            position: absolute; width: 32px; height: 32px; background: var(--bg-card);
+            position: absolute; width: 0; height: 0;
+            transform: translate(0, 0); z-index: 10;
+        }
+        
+        .node-pin {
+            position: absolute; width: 36px; height: 36px; background: var(--bg-card);
             border-radius: 50% 50% 50% 0; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5); transform: translate(-50%, -100%) rotate(-45deg); cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 2px solid rgba(255,255,255,0.2);
         }
         
-        .node:hover, .node.selected {
+        .node:hover .node-pin, .node.selected .node-pin {
             transform: translate(-50%, -100%) rotate(-45deg) scale(1.15); z-index: 20;
             box-shadow: 0 0 0 4px rgba(255,255,255, 0.2);
         }
+
+        .map-area.is-3d .node {
+            /* Exactly cancels out the map's rotateX(45deg) compression (1 / cos(45) = 1.414) */
+            transform: translate(0, 0) scaleY(1.414);
+        }
         
-        .node.active { background-color: var(--success); }
-        .node.warning { background-color: var(--warning); }
-        .node.offline { background-color: var(--danger); }
+        .node.active .node-pin { background-color: var(--success); }
+        .node.warning .node-pin { background-color: var(--warning); }
+        .node.offline .node-pin { background-color: var(--danger); }
         
-        .node-icon { font-size: 0.9rem; color: white; transform: rotate(45deg); }
+        .node-icon { font-size: 1rem; color: white; transform: rotate(45deg); }
         
         .node-label {
-            position: absolute; top: -20px; left: 24px; background: rgba(0,0,0,0.7); color: white;
-            padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; white-space: nowrap;
-            pointer-events: none; opacity: 1; transform: rotate(45deg); font-weight: 500;
-            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px);
+            position: absolute; top: -50px; left: 0; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white;
+            padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; white-space: nowrap;
+            pointer-events: none; opacity: 1; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(4px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+        
+        .node:hover .node-label {
+            transform: translateX(-50%) translateY(-5px);
         }
         
         @keyframes pulse {
@@ -226,7 +253,7 @@ function renderPetaMonitoring() {
             background: var(--bg-card); border-radius: var(--radius-lg, 16px);
             border: 1px solid var(--border-color);
             padding: 24px; display: flex; flex-direction: column; gap: 16px;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow);
         }
 
         .cctv-header {
@@ -234,7 +261,7 @@ function renderPetaMonitoring() {
         }
 
         .cctv-header h3 {
-            font-size: 1.1rem; font-weight: 700; color: white; letter-spacing: 1px;
+            font-size: 1.1rem; font-weight: 700; color: var(--text-main); letter-spacing: 1px;
             display: flex; align-items: center; gap: 8px; margin: 0;
         }
 
@@ -276,30 +303,30 @@ function renderPetaMonitoring() {
         .b-card {
             background: var(--bg-card); border-radius: var(--radius-lg, 16px);
             border: 1px solid var(--border-color);
-            padding: 24px; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            padding: 24px; box-shadow: var(--shadow);
         }
 
         .b-card-title {
-            font-size: 0.9rem; font-weight: 700; color: white; letter-spacing: 1px;
-            text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem; font-weight: 700; color: var(--text-main); letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid var(--border-color);
             padding-bottom: 12px; display: flex; align-items: center; gap: 8px;
         }
 
         .activity-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
         .activity-list li {
             display: flex; align-items: flex-start; gap: 12px;
-            font-size: 0.85rem; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.05);
+            font-size: 0.85rem; padding-bottom: 12px; border-bottom: 1px dashed var(--border-color);
         }
         .activity-list li:last-child { border-bottom: none; padding-bottom: 0; }
-        .act-time { color: #a1a1aa; font-family: monospace; font-size: 0.75rem; margin-top: 2px; }
+        .act-time { color: var(--text-muted); font-family: monospace; font-size: 0.75rem; margin-top: 2px; }
         .act-content { flex: 1; }
-        .act-content strong { color: white; display: block; margin-bottom: 2px; }
-        .act-content span { color: #a1a1aa; }
+        .act-content strong { color: var(--text-main); display: block; margin-bottom: 2px; }
+        .act-content span { color: var(--text-muted); }
         
         .sys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .sys-item { background: rgba(0,0,0,0.3); padding: 12px 8px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .sys-val { font-size: 1.25rem; font-weight: 800; color: white; margin-bottom: 4px; white-space: nowrap; }
-        .sys-label { font-size: 0.65rem; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; word-wrap: break-word; }
+        .sys-item { background: var(--bg-subtle); padding: 12px 8px; border-radius: 12px; text-align: center; border: 1px solid var(--border-color); }
+        .sys-val { font-size: 1.25rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px; white-space: nowrap; }
+        .sys-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.2; word-wrap: break-word; }
 
         .circular-chart { display: flex; flex-direction: column; align-items: center; gap: 8px; }
         .circle {
@@ -350,9 +377,9 @@ function renderPetaMonitoring() {
                     <h3 style="font-size: 1.1rem; color: var(--text-main); font-weight: 700; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-map-location-dot" style="color: var(--primary);"></i> PETA MONITORING AREA
                     </h3>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <button id="btn-add-device" class="btn" style="background: var(--primary); color: white; border: none; padding: 6px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-plus"></i> Tambah CCTV / Perangkat</button>
-                        <button id="btn-toggle-3d" class="btn" style="background: transparent; color: var(--text-main); border: 1px solid var(--border-color); padding: 6px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-cube"></i> 3D Mode</button>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%;">
+                        <button id="btn-add-device" class="btn" style="flex: 1; justify-content: center; background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-plus"></i> Tambah CCTV</button>
+                        <button id="btn-toggle-3d" class="btn" style="flex: 1; justify-content: center; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-cube"></i> 3D Mode</button>
                     </div>
                 </div>
                 
@@ -384,12 +411,12 @@ function renderPetaMonitoring() {
                     <div class="map-zone" style="top: 75%; left: 5%; width: 25%; height: 20%; background: radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 70%); border-color: rgba(245,158,11,0.5);">Entrance</div>
                 </div>
                 
-                <div style="display: flex; gap: 28px; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted); justify-content: center; font-weight: 500; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
-                    <div style="display:flex; align-items:center; gap: 8px;"><div style="width:12px; height:12px; border-radius:50%; background:var(--success); box-shadow: 0 0 8px var(--success);"></div> Online</div>
-                    <div style="display:flex; align-items:center; gap: 8px;"><div style="width:12px; height:12px; border-radius:50%; background:var(--warning); box-shadow: 0 0 8px var(--warning);"></div> Warning</div>
-                    <div style="display:flex; align-items:center; gap: 8px;"><div style="width:12px; height:12px; border-radius:50%; background:var(--danger); box-shadow: 0 0 8px var(--danger);"></div> Offline</div>
-                    <div style="display:flex; align-items:center; gap: 8px; margin-left: 24px; color: var(--text-main);"><i class="fa-solid fa-video" style="color: rgba(255,255,255,0.7);"></i> Kamera CCTV (Analog)</div>
-                    <div style="display:flex; align-items:center; gap: 8px; color: var(--text-main);"><i class="fa-solid fa-server" style="color: rgba(255,255,255,0.7);"></i> Mesin DVR Utama</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 20px; font-size: 0.85rem; color: var(--text-muted); justify-content: center; font-weight: 500; background: var(--bg-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="display:flex; align-items:center; gap: 6px;"><div style="width:10px; height:10px; border-radius:50%; background:var(--success); box-shadow: 0 0 8px var(--success);"></div> Online</div>
+                    <div style="display:flex; align-items:center; gap: 6px;"><div style="width:10px; height:10px; border-radius:50%; background:var(--warning); box-shadow: 0 0 8px var(--warning);"></div> Warning</div>
+                    <div style="display:flex; align-items:center; gap: 6px;"><div style="width:10px; height:10px; border-radius:50%; background:var(--danger); box-shadow: 0 0 8px var(--danger);"></div> Offline</div>
+                    <div style="display:flex; align-items:center; gap: 6px; margin-left: 8px; color: var(--text-main);"><i class="fa-solid fa-video" style="color: var(--text-muted);"></i> CCTV</div>
+                    <div style="display:flex; align-items:center; gap: 6px; color: var(--text-main);"><i class="fa-solid fa-server" style="color: var(--text-muted);"></i> DVR</div>
                 </div>
             </div>
             
@@ -397,7 +424,7 @@ function renderPetaMonitoring() {
             <div class="cctv-sidebar">
                 <div class="cctv-header">
                     <h3><i class="fa-solid fa-border-all" style="color: var(--primary);"></i> LIVE FEED</h3>
-                    <a href="#" style="color: var(--primary); font-size: 0.8rem; text-decoration: none; font-weight: 600;">Full Matrix ></a>
+                    <a href="/dasbord/live-cctv-monitoring" style="color: var(--primary); font-size: 0.8rem; text-decoration: none; font-weight: 600;">Full Matrix ></a>
                 </div>
                 <div class="live-cctv-grid" id="sidebar-live-cctv">
                     <!-- Injected dynamically -->
@@ -469,23 +496,23 @@ function renderPetaMonitoring() {
                 
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; margin-top: 20px;">
                     <div>
-                        <div style="font-size: 2.5rem; font-weight: 800; color: white; line-height: 1;">8.4 <span style="font-size: 1rem; color: #a1a1aa;">TB</span></div>
-                        <div style="font-size: 0.8rem; color: #a1a1aa; margin-top: 4px;">Terpakai dari 16 TB</div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1;">8.4 <span style="font-size: 1rem; color: var(--text-muted);">TB</span></div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Terpakai dari 16 TB</div>
                     </div>
                     <div style="font-size: 1.8rem; font-weight: 700; color: #3b82f6;">52%</div>
                 </div>
                 
-                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
+                <div style="width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
                     <div style="width: 52%; height: 100%; background: linear-gradient(90deg, #3b82f6, var(--primary)); border-radius: 4px;"></div>
                 </div>
                 
                 <div style="display: flex; gap: 16px;">
-                    <div style="flex: 1; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="font-size: 0.7rem; color: #a1a1aa; margin-bottom: 4px;">Arsip Tersedia</div>
-                        <div style="font-size: 1.1rem; color: white; font-weight: 700;">180 Hari</div>
+                    <div style="flex: 1; background: var(--bg-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Arsip Tersedia</div>
+                        <div style="font-size: 1.1rem; color: var(--text-main); font-weight: 700;">180 Hari</div>
                     </div>
-                    <div style="flex: 1; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-                        <div style="font-size: 0.7rem; color: #a1a1aa; margin-bottom: 4px;">Backup Cloud</div>
+                    <div style="flex: 1; background: var(--bg-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">Backup Cloud</div>
                         <div style="font-size: 1.1rem; color: var(--primary); font-weight: 700;">Sinkron</div>
                     </div>
                 </div>
@@ -537,7 +564,9 @@ function renderPetaMonitoring() {
                 nodeEl.style.left = `${node.x}%`;
                 nodeEl.style.top = `${node.y}%`;
                 nodeEl.innerHTML = `
-                    <i class="fa-solid ${iconClass} node-icon"></i>
+                    <div class="node-pin">
+                        <i class="fa-solid ${iconClass} node-icon"></i>
+                    </div>
                     <div class="node-label">${node.name}</div>
                 `;
                 

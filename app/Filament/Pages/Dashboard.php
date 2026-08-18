@@ -17,6 +17,10 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     public function filtersForm(Schema $schema): Schema
     {
+        if (auth()->user()->hasRole('security')) {
+            return $schema->schema([]);
+        }
+
         return $schema
             ->schema([
                 Select::make('period')
@@ -45,6 +49,10 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     public function getHeaderWidgets(): array
     {
+        if (auth()->user()->hasRole('security')) {
+            return []; // No welcome banner for security to save space for CCTV widgets
+        }
+
         return [
             \App\Filament\Widgets\WelcomeBannerWidget::class,
         ];
@@ -52,8 +60,24 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     public function getWidgets(): array
     {
+        if (auth()->user()->hasRole('security')) {
+            return [
+                \App\Filament\Widgets\CctvStatusWidget::class,
+                \App\Filament\Widgets\CctvLiveFeedsWidget::class,
+                \App\Filament\Widgets\CctvBandwidthChartWidget::class,
+                \App\Filament\Widgets\CctvStorageChartWidget::class,
+                \App\Filament\Widgets\CctvEnvironmentSensorWidget::class,
+                \App\Filament\Widgets\CctvQuickActionWidget::class,
+                \App\Filament\Widgets\CctvRecentAlertsWidget::class,
+                \App\Filament\Widgets\CctvDeviceHealthWidget::class,
+            ];
+        }
+
         $widgets = parent::getWidgets();
-        // Hapus WelcomeBannerWidget dari widget utama (bawah filter) karena sudah di atas
-        return array_filter($widgets, fn (string $widget): bool => $widget !== \App\Filament\Widgets\WelcomeBannerWidget::class);
+        // Hapus WelcomeBannerWidget & CCTV Widgets dari widget utama (bawah filter)
+        return array_filter($widgets, function (string $widget): bool {
+            return $widget !== \App\Filament\Widgets\WelcomeBannerWidget::class &&
+                   strpos($widget, 'Cctv') === false;
+        });
     }
 }

@@ -28,6 +28,11 @@ class DeviceResource extends Resource
     protected static ?string $pluralModelLabel = 'Perangkat Jaringan';
     protected static ?int $navigationSort = 5;
 
+    public static function canAccess(): bool
+    {
+        return !auth()->user()->hasAnyRole(['ticketing', 'sales']);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return DeviceForm::configure($schema);

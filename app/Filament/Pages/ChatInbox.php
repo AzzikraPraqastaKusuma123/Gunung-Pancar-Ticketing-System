@@ -13,6 +13,11 @@ class ChatInbox extends Page
 
     protected static ?string $title = 'Agent Inbox';
     protected ?string $heading = 'Agent Inbox';
+
+    public static function canAccess(): bool
+    {
+        return !auth()->user()->hasAnyRole(['security', 'ticketing']);
+    }
     
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-chat-bubble-left-right';
     protected static ?string $navigationLabel = 'Inbox Customer Service';

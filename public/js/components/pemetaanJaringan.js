@@ -387,7 +387,7 @@ function renderPemetaanJaringan() {
             <div class="cctv-sidebar">
                 <div class="cctv-header">
                     <h3><i class="fa-solid fa-border-all" style="color: var(--map-primary);"></i> LIVE FEED</h3>
-                    <a href="#" style="color: var(--map-primary); font-size: 0.8rem; text-decoration: none; font-weight: 600;">Full Matrix ></a>
+                    <a href="/dasbord/live-cctv-monitoring" style="color: var(--map-primary); font-size: 0.8rem; text-decoration: none; font-weight: 600;">Full Matrix ></a>
                 </div>
                 <div class="live-cctv-grid" id="sidebar-live-cctv">
                     <!-- Injected dynamically -->

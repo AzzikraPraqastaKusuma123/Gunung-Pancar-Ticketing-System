@@ -14,6 +14,11 @@ class GisMapPage extends Page
     protected static string | \UnitEnum | null $navigationGroup = 'Command Center';
     protected static ?int $navigationSort = 1;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'security']);
+    }
+
     protected function getHeaderWidgets(): array
     {
         return [
@@ -68,7 +73,7 @@ class GisMapPage extends Page
             \Filament\Actions\Action::make('detail_cctv')
                 ->hidden()
                 ->model(\App\Models\Device::class)
-                ->infolist(function (\Filament\Infolists\Infolist $infolist, array $arguments) {
+                ->infolist(function ($infolist, array $arguments) {
                     $device = \App\Models\Device::find($arguments['device_id'] ?? null);
                     return $infolist
                         ->record($device)

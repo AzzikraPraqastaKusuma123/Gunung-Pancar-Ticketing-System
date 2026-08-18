@@ -29,7 +29,7 @@ class TicketResource extends Resource
 
     public static function canAccess(): bool
     {
-        return !auth()->user()->hasRole('sales');
+        return !auth()->user()->hasRole('sales') && !auth()->user()->hasRole('security');
     }
 
     public static function form(Schema $schema): Schema

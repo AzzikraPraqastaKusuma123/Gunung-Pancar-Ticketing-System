@@ -18,4 +18,9 @@ class VideoPlaybackPage extends Page
     protected static string | \UnitEnum | null $navigationGroup = 'Command Center';
 
     protected static ?int $navigationSort = 4;
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'security']);
+    }
 }

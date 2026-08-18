@@ -21,6 +21,11 @@ class NetworkTopologyPage extends Page
 
     protected static ?int $navigationSort = 2;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'security']);
+    }
+
     public function getDevices()
     {
         return \App\Models\Device::all()->map(function ($device) {

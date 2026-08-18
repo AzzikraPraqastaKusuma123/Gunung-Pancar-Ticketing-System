@@ -59,20 +59,41 @@
         });
     </script>
     <style>
+        /* Light Mode Default */
         .camping-theme-wrapper {
-            --bg-dark: #000000;
-            --bg-card: #0a0a0a;
+            --bg-dark: transparent;
+            --bg-card: #ffffff;
+            --bg-subtle: #f3f4f6;
+            --primary: #10b981;
+            --secondary: #059669;
+            --accent: #34d399;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --success: #22c55e;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            color: var(--text-main);
+        }
+
+        /* Dark Mode Override */
+        .dark .camping-theme-wrapper {
+            --bg-dark: transparent;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-subtle: rgba(255, 255, 255, 0.08);
             --primary: #10b981;
             --secondary: #059669;
             --accent: #34d399;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --border-color: #1f2937;
+            --border-color: rgba(255, 255, 255, 0.1);
             --danger: #ef4444;
             --warning: #f59e0b;
             --info: #3b82f6;
             --success: #22c55e;
-            color: var(--text-main);
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
     </style>
 </x-filament-panels::page>

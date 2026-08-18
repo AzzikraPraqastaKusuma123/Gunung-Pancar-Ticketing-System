@@ -14,6 +14,11 @@ class LiveCctvMonitoring extends Page
     protected static string | \UnitEnum | null $navigationGroup = 'Command Center';
     protected static ?int $navigationSort = 3;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasAnyRole(['super_admin', 'security']);
+    }
+
     protected string $view = 'filament.clusters.command-center.pages.live-cctv-monitoring';
 
     public function getActiveCctvs()

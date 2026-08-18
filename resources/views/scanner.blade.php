@@ -10,10 +10,27 @@
     <title>Scanner Tiket - Camping Ground</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Sinkronisasi dengan Dark Mode Filament
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
+        // Sinkronisasi dinamis dengan Dark Mode dari parent (Filament Dashboard)
+        function syncTheme() {
+            try {
+                if (window.parent && window.parent.document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            } catch(e) {}
         }
+        syncTheme(); // Jalankan saat pertama kali dimuat
+
+        // Pantau perubahan tema di parent secara real-time
+        try {
+            if (window.parent !== window) {
+                new MutationObserver(syncTheme).observe(window.parent.document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ['class']
+                });
+            }
+        } catch(e) {}
     </script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -164,26 +164,30 @@ class AdminPanelProvider extends PanelProvider
                 }
 
                 /* ── APEX-STYLE PREMIUM DARK MODE ── */
-                .dark body, .dark .fi-main {
+                html.dark body, html.dark .fi-main {
                     background-color: #06110a !important; /* Deep forest dark */
                 }
-                .dark .fi-sidebar {
+                html.dark .fi-sidebar {
                     background-color: #040d07 !important;
                     border-right: 1px solid rgba(16, 185, 129, 0.1) !important;
                 }
-                .dark .fi-topbar {
+                html.dark .fi-topbar {
                     background-color: rgba(4, 13, 7, 0.8) !important;
                     border-bottom: 1px solid rgba(16, 185, 129, 0.1) !important;
                     backdrop-filter: blur(12px);
                 }
-                .dark .fi-ta-ctn, .dark .fi-wi-stats-overview-stat, .dark .fi-wi-chart, .dark .fi-section, .dark .fi-dropdown-panel {
-                    background: linear-gradient(145deg, #091f15 0%, #06160e 100%) !important;
-                    border: 1px solid rgba(16, 185, 129, 0.15) !important;
+                html.dark .fi-ta-ctn, html.dark .fi-wi-stats-overview-stat, html.dark .fi-wi-chart, html.dark .fi-section, html.dark .fi-dropdown-panel, html.dark .fi-modal-window, html.dark .fi-slide-over-window {
+                    background: rgba(6, 40, 25, 0.6) !important;
+                    border: 1px solid rgba(16, 185, 129, 0.2) !important;
                     box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8) !important;
                     border-radius: 1rem !important;
+                    backdrop-filter: blur(16px);
                 }
-                .dark .fi-ta-header-heading, .dark h1, .dark h2, .dark h3 {
+                html.dark .fi-ta-header-heading, html.dark h1, html.dark h2, html.dark h3, html.dark .fi-wi-stats-overview-stat-value {
                     color: #f8fafc !important;
+                }
+                html.dark .fi-wi-stats-overview-stat-label {
+                    color: #cbd5e1 !important;
                 }
 
                 /* Fix for Sidebar Footer Overlap */
@@ -386,7 +390,7 @@ class AdminPanelProvider extends PanelProvider
                             gap: 0.65rem;
                             padding: 0.85rem 1rem;
                             margin: 0.5rem 0.75rem 0.75rem;
-                            background: rgba(4, 13, 7, 0.95);
+                            background: rgba(243, 244, 246, 0.95);
                             backdrop-filter: blur(12px);
                             border: 1px solid rgba(16, 185, 129, 0.3);
                             border-radius: 0.85rem;
@@ -396,11 +400,17 @@ class AdminPanelProvider extends PanelProvider
                             overflow: hidden;
                             position: relative;
                             z-index: 50;
-                            box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+                            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
                         }
                         .sb-user-card:hover {
+                            background: rgba(16, 185, 129, 0.1);
+                        }
+                        .dark .sb-user-card {
+                            background: rgba(4, 13, 7, 0.95);
+                            box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+                        }
+                        .dark .sb-user-card:hover {
                             background: rgba(16, 185, 129, 0.14);
-                            border-color: rgba(16, 185, 129, 0.3);
                         }
                         .sb-user-avatar {
                             width: 36px;
@@ -423,21 +433,30 @@ class AdminPanelProvider extends PanelProvider
                         .sb-user-name {
                             font-size: 0.8rem;
                             font-weight: 700;
-                            color: #f0fdf4;
+                            color: #111827;
                             white-space: nowrap;
                             overflow: hidden;
                             text-overflow: ellipsis;
                             line-height: 1.2;
                         }
+                        .dark .sb-user-name {
+                            color: #f0fdf4;
+                        }
                         .sb-user-role {
                             font-size: 0.68rem;
-                            color: #6ee7b7;
+                            color: #059669;
                             font-weight: 500;
                             margin-top: 1px;
                         }
+                        .dark .sb-user-role {
+                            color: #6ee7b7;
+                        }
                         .sb-user-icon {
-                            color: rgba(110, 231, 183, 0.5);
+                            color: #9ca3af;
                             flex-shrink: 0;
+                        }
+                        .dark .sb-user-icon {
+                            color: rgba(110, 231, 183, 0.5);
                         }
                         .sb-user-icon svg {
                             width: 14px;

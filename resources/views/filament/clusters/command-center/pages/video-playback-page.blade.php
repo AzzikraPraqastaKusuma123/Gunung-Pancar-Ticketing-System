@@ -1,6 +1,8 @@
 <x-filament-panels::page>
 
     {{-- PAGE HEADER --}}
+    <div class="camping-theme-wrapper">
+
     <div class="dvr-header">
         <div class="dvr-header-left">
             <div class="dvr-header-icon-wrap">
@@ -12,11 +14,12 @@
             </div>
         </div>
         <div class="dvr-header-actions">
-            <button class="dvr-btn dvr-btn-ghost">
+            <button class="dvr-btn dvr-btn-ghost" style="position: relative;" onclick="document.getElementById('dvr-date-picker').showPicker()">
                 <x-filament::icon icon="heroicon-m-calendar-days" class="dvr-btn-icon" />
-                <span>Pilih Tanggal</span>
+                <span id="dvr-date-text">Pilih Tanggal</span>
+                <input type="date" id="dvr-date-picker" style="position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;" onchange="updateDvrDate(this.value)" />
             </button>
-            <button class="dvr-btn dvr-btn-primary">
+            <button class="dvr-btn dvr-btn-primary" onclick="exportDvrVideo()">
                 <x-filament::icon icon="heroicon-m-arrow-down-tray" class="dvr-btn-icon" />
                 <span>Ekspor</span>
             </button>
@@ -229,7 +232,7 @@
                             ['time' => '22:15', 'desc' => 'Kendaraan melintas gate'],
                             ['time' => '23:50', 'desc' => 'Aktivitas di area loket'],
                         ] as $event)
-                            <button class="dvr-event-item">
+                            <button class="dvr-event-item" onclick="jumpToTimeline({{ $loop->index * 25 + 15 }})">
                                 <div class="dvr-event-dot"></div>
                                 <div class="dvr-event-body">
                                     <span class="dvr-event-time">{{ $event['time'] }}</span>
@@ -246,25 +249,61 @@
     </div>
 
     <style>
+        .camping-theme-wrapper {
+            --bg-dark: transparent;
+            --bg-card: #ffffff;
+            --bg-subtle: #f3f4f6;
+            --primary: #10b981;
+            --secondary: #059669;
+            --accent: #34d399;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --success: #22c55e;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --bg-translucent: rgba(255, 255, 255, 0.7);
+            color: var(--text-main);
+        }
+        .dark .camping-theme-wrapper {
+            --bg-dark: transparent;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-subtle: rgba(255, 255, 255, 0.08);
+            --primary: #10b981;
+            --secondary: #059669;
+            --accent: #34d399;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --success: #22c55e;
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --bg-translucent: rgba(0, 0, 0, 0.3);
+        }
+
         *, *::before, *::after { box-sizing: border-box; }
 
         /* ── HEADER ── */
         .dvr-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:24px; flex-wrap:wrap; }
         .dvr-header-left { display:flex; align-items:center; gap:14px; min-width:0; }
         .dvr-header-icon-wrap { flex-shrink:0; width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(16,185,129,.05)); border:1px solid rgba(16,185,129,.3); display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px rgba(16,185,129,.15); }
-        .dvr-header-icon { width:24px; height:24px; color:#10b981; }
-        .dvr-header-title { font-size:1.35rem; font-weight:800; color:#f9fafb; margin:0; letter-spacing:-.02em; white-space:nowrap; }
-        .dvr-title-accent { color:#10b981; }
-        .dvr-header-subtitle { font-size:.8rem; color:#94a3b8; margin:4px 0 0; }
+        .dvr-header-icon { width:24px; height:24px; color:var(--success); }
+        .dvr-header-title { font-size:1.35rem; font-weight:800; color:var(--text-main); margin:0; letter-spacing:-.02em; white-space:nowrap; }
+        .dvr-title-accent { color:var(--success); }
+        .dvr-header-subtitle { font-size:.8rem; color:var(--text-muted); margin:4px 0 0; }
         .dvr-header-actions { display:flex; gap:10px; flex-shrink:0; width: 100%; }
         @media(min-width:640px) { .dvr-header-actions { width: auto; } }
 
         .dvr-btn { display:inline-flex; flex: 1; justify-content: center; align-items:center; gap:6px; padding:10px 16px; border-radius:12px; font-size:.85rem; font-weight:600; cursor:pointer; border:none; transition:all .2s; white-space:nowrap; }
         @media(min-width:640px) { .dvr-btn { flex: none; justify-content: flex-start; } }
         .dvr-btn-icon { width:16px; height:16px; }
-        .dvr-btn-ghost { background:rgba(31,41,55,.6); color:#d1d5db; border:1px solid rgba(255,255,255,.08); }
-        .dvr-btn-ghost:hover { background:rgba(55,65,81,.8); color:#fff; }
-        .dvr-btn-primary { background:linear-gradient(135deg,#10b981,#059669); color:#fff; box-shadow:0 4px 12px rgba(16,185,129,.3); }
+        .dvr-btn-ghost { background:var(--bg-subtle); color:var(--text-muted); border:1px solid var(--border-color); }
+        .dvr-btn-ghost:hover { background:rgba(55,65,81,.8); color:var(--text-main); }
+        .dvr-btn-primary { background:linear-gradient(135deg,#10b981,#059669); color:var(--text-main); box-shadow:0 4px 12px rgba(16,185,129,.3); }
         .dvr-btn-primary:hover { background:linear-gradient(135deg,#34d399,#10b981); box-shadow:0 6px 20px rgba(16,185,129,.4); transform:translateY(-1px); }
 
         /* ── MAIN LAYOUT ── */
@@ -272,64 +311,64 @@
         @media(min-width:1024px) { .dvr-layout { display: grid; grid-template-columns: 320px 1fr; gap:24px; } }
 
         /* ── SIDEBAR (ARSIP) ── */
-        .dvr-sidebar { background:rgba(10,15,25,.75); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px; backdrop-filter:blur(16px); box-shadow:0 10px 30px rgba(0,0,0,.5); }
+        .dvr-sidebar { background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:16px; backdrop-filter:blur(16px); box-shadow:0 10px 30px rgba(0,0,0,.5); }
         @media(min-width:1024px) { .dvr-sidebar { height:780px; } }
         .dvr-sidebar-head { display:flex; align-items:center; gap:10px; }
-        .dvr-sec-icon { width:20px; height:20px; color:#10b981; flex-shrink:0; }
-        .dvr-sec-title { font-size:1rem; font-weight:700; color:#f8fafc; margin:0; }
+        .dvr-sec-icon { width:20px; height:20px; color:var(--success); flex-shrink:0; }
+        .dvr-sec-title { font-size:1rem; font-weight:700; color:var(--text-main); margin:0; }
 
         .dvr-search-wrap { position:relative; }
-        .dvr-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#6b7280; pointer-events:none; }
-        .dvr-search-input { width:100%; padding:10px 12px 10px 36px; background:rgba(31,41,55,.6); border:1px solid rgba(255,255,255,.1); border-radius:10px; color:#f3f4f6; font-size:.85rem; outline:none; transition:border-color .2s; }
-        .dvr-search-input::placeholder { color:#6b7280; }
+        .dvr-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:var(--text-muted); pointer-events:none; }
+        .dvr-search-input { width:100%; padding:10px 12px 10px 36px; background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:10px; color:var(--text-main); font-size:.85rem; outline:none; transition:border-color .2s; }
+        .dvr-search-input::placeholder { color:var(--text-muted); }
         .dvr-search-input:focus { border-color:rgba(16,185,129,.5); box-shadow: 0 0 0 2px rgba(16,185,129,.1); }
 
         .dvr-pills { display:flex; gap:8px; overflow-x:auto; padding-bottom: 4px; }
         .dvr-pills::-webkit-scrollbar { display:none; }
-        .dvr-pill { padding:6px 14px; border-radius:999px; font-size:.75rem; font-weight:600; background:rgba(31,41,55,.8); color:#9ca3af; border:1px solid transparent; cursor:pointer; white-space:nowrap; transition:all .2s; }
-        .dvr-pill:hover { color:#f3f4f6; border-color:rgba(255,255,255,.15); }
-        .dvr-pill--active { background:rgba(16,185,129,.15); color:#34d399; border-color:rgba(16,185,129,.4); }
+        .dvr-pill { padding:6px 14px; border-radius:999px; font-size:.75rem; font-weight:600; background:var(--bg-subtle); color:var(--text-muted); border:1px solid transparent; cursor:pointer; white-space:nowrap; transition:all .2s; }
+        .dvr-pill:hover { color:var(--text-main); border-color:var(--border-color); }
+        .dvr-pill--active { background:rgba(16,185,129,.15); color:var(--success); border-color:rgba(16,185,129,.4); }
 
         /* Video List changed to vertical on mobile for much better UX */
         .dvr-video-list { display:grid; grid-template-columns: 1fr; gap:12px; max-height: 400px; overflow-y:auto; padding-right: 4px; }
         @media(min-width:640px) { .dvr-video-list { grid-template-columns: 1fr 1fr; } }
         @media(min-width:1024px) { .dvr-video-list { display:flex; flex-direction:column; max-height:none; flex:1; } }
 
-        .dvr-video-item { width:100%; text-align:left; padding:12px; border-radius:14px; background:rgba(17,24,39,.6); border:1px solid transparent; display:flex; gap:12px; align-items:center; cursor:pointer; transition:all .2s; box-shadow: 0 4px 6px rgba(0,0,0,.2); }
-        .dvr-video-item:hover { background:rgba(31,41,55,.9); border-color:rgba(16,185,129,.3); transform: translateY(-1px); }
+        .dvr-video-item { width:100%; text-align:left; padding:12px; border-radius:14px; background:var(--bg-subtle); border:1px solid transparent; display:flex; gap:12px; align-items:center; cursor:pointer; transition:all .2s; box-shadow: 0 4px 6px rgba(0,0,0,.2); }
+        .dvr-video-item:hover { background:var(--bg-subtle); border-color:rgba(16,185,129,.3); transform: translateY(-1px); }
         .dvr-video-item--active { background:rgba(16,185,129,.1); border-color:rgba(16,185,129,.5); box-shadow:0 0 20px rgba(16,185,129,.1); }
 
-        .dvr-thumb { position:relative; width:80px; height:56px; border-radius:10px; overflow:hidden; flex-shrink:0; background:#000; border:1px solid rgba(255,255,255,.1); }
+        .dvr-thumb { position:relative; width:80px; height:56px; border-radius:10px; overflow:hidden; flex-shrink:0; background:#000; border:1px solid var(--border-color); }
         .dvr-thumb-img { width:100%; height:100%; object-fit:cover; opacity:.6; transition:opacity .3s,transform .4s; }
         .dvr-video-item:hover .dvr-thumb-img { opacity:1; transform:scale(1.1); }
         .dvr-thumb-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
         .dvr-thumb-play { width:24px; height:24px; color:rgba(255,255,255,.8); transition:color .2s,transform .2s; filter:drop-shadow(0 2px 4px rgba(0,0,0,.8)); }
-        .dvr-video-item:hover .dvr-thumb-play { color:#34d399; transform:scale(1.2); }
-        .dvr-video-item--active .dvr-thumb-play { color:#10b981; }
+        .dvr-video-item:hover .dvr-thumb-play { color:var(--success); transform:scale(1.2); }
+        .dvr-video-item--active .dvr-thumb-play { color:var(--success); }
 
         .dvr-item-meta { overflow:hidden; flex:1; min-width:0; }
-        .dvr-item-name { font-size:.85rem; font-weight:700; color:#f3f4f6; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0 0 4px; transition:color .2s; }
-        .dvr-video-item:hover .dvr-item-name { color:#34d399; }
-        .dvr-video-item--active .dvr-item-name { color:#10b981; }
-        .dvr-item-detail { display:flex; align-items:center; gap:5px; font-size:.7rem; color:#94a3b8; }
+        .dvr-item-name { font-size:.85rem; font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0 0 4px; transition:color .2s; }
+        .dvr-video-item:hover .dvr-item-name { color:var(--success); }
+        .dvr-video-item--active .dvr-item-name { color:var(--success); }
+        .dvr-item-detail { display:flex; align-items:center; gap:5px; font-size:.7rem; color:var(--text-muted); }
         .dvr-meta-icon { width:12px; height:12px; flex-shrink:0; }
         .dvr-item-footer { display:flex; align-items:center; justify-content: space-between; margin-top:4px; }
-        .dvr-motion-badge { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); border-radius:999px; font-size:.65rem; font-weight:700; color:#fca5a5; }
+        .dvr-motion-badge { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); border-radius:999px; font-size:.65rem; font-weight:700; color:var(--danger); }
         .dvr-badge-icon { width:10px; height:10px; }
 
         /* ── MAIN AREA ── */
         .dvr-main { display:flex; flex-direction:column; gap:24px; min-width:0; }
 
         /* ── PLAYER CARD ── */
-        .dvr-player-card { background:rgba(10,15,25,.75); border:1px solid rgba(255,255,255,.08); border-radius:16px; overflow:hidden; backdrop-filter:blur(16px); box-shadow:0 10px 40px rgba(0,0,0,.6); }
+        .dvr-player-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; overflow:hidden; backdrop-filter:blur(16px); box-shadow:0 10px 40px rgba(0,0,0,.6); }
         .dvr-player-topbar { padding:14px 20px; display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,.4); border-bottom:1px solid rgba(255,255,255,.08); gap:12px; flex-wrap:wrap; }
         .dvr-player-info { display:flex; align-items:center; gap:12px; }
         .dvr-rec-dot { width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 10px rgba(16,185,129,1); flex-shrink:0; animation: pulse-rec 2s infinite; }
         @keyframes pulse-rec { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        .dvr-player-name { font-size:1rem; font-weight:800; color:#f8fafc; }
+        .dvr-player-name { font-size:1rem; font-weight:800; color:var(--text-main); }
         .dvr-player-badges { display:flex; gap:8px; flex-wrap:wrap; }
-        .dvr-badge { padding:4px 10px; border-radius:6px; font-size:.7rem; font-weight:700; background:rgba(31,41,55,.9); color:#cbd5e1; border:1px solid rgba(255,255,255,.1); }
-        .dvr-badge--green { background:rgba(16,185,129,.15); color:#34d399; border-color:rgba(16,185,129,.3); }
+        .dvr-badge { padding:4px 10px; border-radius:6px; font-size:.7rem; font-weight:700; background:var(--bg-subtle); color:#cbd5e1; border:1px solid var(--border-color); }
+        .dvr-badge--green { background:rgba(16,185,129,.15); color:var(--success); border-color:rgba(16,185,129,.3); }
 
         .dvr-video-wrap { position:relative; width:100%; aspect-ratio:16/9; background:#030712; overflow:hidden; cursor:pointer; }
         .dvr-video-bg { width:100%; height:100%; object-fit:cover; opacity:.6; transition:opacity .3s; }
@@ -339,7 +378,7 @@
         .dvr-osd-tl,.dvr-osd-tr { position:absolute; font-size:.7rem; font-family:monospace; font-weight:700; color:rgba(255,255,255,.8); background:rgba(0,0,0,.5); padding:4px 10px; border-radius:6px; backdrop-filter:blur(8px); display:flex; align-items:center; gap:6px; z-index: 2; border: 1px solid rgba(255,255,255,0.1); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
         .dvr-osd-tl { top:16px; left:16px; }
         .dvr-osd-tr { top:16px; right:16px; }
-        .dvr-osd-icon { width:12px; height:12px; color:#10b981; }
+        .dvr-osd-icon { width:12px; height:12px; color:var(--success); }
 
         .dvr-play-wrap { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:3; transition: opacity 0.3s, visibility 0.3s; }
         .dvr-play-wrap.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -361,11 +400,11 @@
         .dvr-ctrl-row { display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px; }
         .dvr-ctrl-left,.dvr-ctrl-right { display:flex; align-items:center; gap:14px; }
         .dvr-ctrl-btn { background:transparent; border:none; color:rgba(255,255,255,.8); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; padding:6px; border-radius:8px; }
-        .dvr-ctrl-btn:hover { color:#34d399; background:rgba(255,255,255,.1); }
+        .dvr-ctrl-btn:hover { color:var(--success); background:rgba(255,255,255,.1); }
         .dvr-ctrl-icon { width:20px; height:20px; }
         .dvr-ctrl-icon--lg { width:26px; height:26px; color: #fff; }
-        .dvr-speed-btn { font-size:.8rem; font-weight:700; font-family:monospace; padding:4px 10px; border-radius:8px; background:rgba(31,41,55,.8); border:1px solid rgba(255,255,255,.15); color:#e5e7eb; }
-        .dvr-timecode { font-size:.75rem; font-weight:600; font-family:monospace; color:rgba(255,255,255,.9); background:rgba(0,0,0,.5); padding:4px 10px; border-radius:6px; border:1px solid rgba(255,255,255,.1); }
+        .dvr-speed-btn { font-size:.8rem; font-weight:700; font-family:monospace; padding:4px 10px; border-radius:8px; background:var(--bg-subtle); border:1px solid rgba(255,255,255,.15); color:#e5e7eb; }
+        .dvr-timecode { font-size:.75rem; font-weight:600; font-family:monospace; color:rgba(255,255,255,.9); background:rgba(0,0,0,.5); padding:4px 10px; border-radius:6px; border:1px solid var(--border-color); }
 
         .dvr-player-footer { padding:16px 20px; background:rgba(0,0,0,.25); border-top:1px solid rgba(255,255,255,.08); }
         .dvr-info-grid { display:grid; grid-template-columns:1fr; gap:16px; }
@@ -375,47 +414,47 @@
             .dvr-info-item { padding-bottom: 0; border-bottom: none; }
             .dvr-info-item--border { padding-left:16px; border-left:1px solid rgba(255,255,255,.08); }
         }
-        .dvr-info-label { font-size:.65rem; text-transform:uppercase; font-weight:800; color:#6b7280; letter-spacing:.08em; }
-        .dvr-info-val { font-size:.85rem; font-weight:700; color:#f3f4f6; }
+        .dvr-info-label { font-size:.65rem; text-transform:uppercase; font-weight:800; color:var(--text-muted); letter-spacing:.08em; }
+        .dvr-info-val { font-size:.85rem; font-weight:700; color:var(--text-main); }
         .dvr-flex-center { display:flex; align-items:center; gap:6px; }
-        .dvr-text-danger { color:#fca5a5; }
-        .dvr-info-icon { width:16px; height:16px; color:#10b981; flex-shrink:0; }
-        .dvr-icon-danger { color:#ef4444; }
+        .dvr-text-danger { color:var(--danger); }
+        .dvr-info-icon { width:16px; height:16px; color:var(--success); flex-shrink:0; }
+        .dvr-icon-danger { color:var(--danger); }
 
         /* ── TIMELINE CARD ── */
-        .dvr-timeline-card { background:rgba(10,15,25,.75); border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:20px; backdrop-filter:blur(16px); box-shadow:0 10px 40px rgba(0,0,0,.4); }
+        .dvr-timeline-card { background:var(--bg-card); border:1px solid var(--border-color); border-radius:16px; padding:20px; backdrop-filter:blur(16px); box-shadow:0 10px 40px rgba(0,0,0,.4); }
         .dvr-tl-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:10px; flex-wrap:wrap; }
         .dvr-tl-title-wrap { display:flex; align-items:center; gap:10px; }
-        .dvr-tl-title { font-size:.9rem; font-weight:800; color:#f8fafc; text-transform:uppercase; letter-spacing:.06em; margin:0; }
+        .dvr-tl-title { font-size:.9rem; font-weight:800; color:var(--text-main); text-transform:uppercase; letter-spacing:.06em; margin:0; }
         .dvr-tl-legend { display:flex; gap:16px; }
-        .dvr-legend-item { display:flex; align-items:center; gap:6px; font-size:.7rem; font-weight:600; color:#9ca3af; text-transform: uppercase; }
+        .dvr-legend-item { display:flex; align-items:center; gap:6px; font-size:.7rem; font-weight:600; color:var(--text-muted); text-transform: uppercase; }
         .dvr-legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
         .dvr-legend-dot--green { background:#10b981; box-shadow:0 0 8px rgba(16,185,129,.6); }
         .dvr-legend-dot--red   { background:#ef4444; box-shadow:0 0 8px rgba(239,68,68,.6); }
 
-        .dvr-tl-bar { height:72px; background:rgba(0,0,0,.5); border-radius:12px; position:relative; display:flex; align-items:flex-end; border:1px solid rgba(255,255,255,.08); overflow:hidden; cursor:pointer; }
+        .dvr-tl-bar { height:72px; background:rgba(0,0,0,.5); border-radius:12px; position:relative; display:flex; align-items:flex-end; border:1px solid var(--border-color); overflow:hidden; cursor:pointer; }
         .dvr-tl-progress { position:absolute; inset:0; width:33.33%; background:rgba(16,185,129,.2); border-right:2px solid #10b981; box-shadow:2px 0 20px rgba(16,185,129,.3); }
         .dvr-tl-spike { position:absolute; bottom:24px; width:4px; height:45%; background:#ef4444; border-radius:999px; box-shadow:0 0 8px rgba(239,68,68,.8); cursor:pointer; transition:height .2s,box-shadow .2s; }
         .dvr-tl-spike:hover { height:75%; box-shadow:0 0 16px rgba(239,68,68,1); background: #fca5a5; }
         .dvr-tl-playhead { position:absolute; top:0; bottom:0; left:33.33%; width:2px; background:#fff; box-shadow:0 0 12px rgba(255,255,255,1); z-index:10; }
         .dvr-tl-playhead-cap { position:absolute; top:-6px; left:50%; transform:translateX(-50%) rotate(45deg); width:12px; height:12px; background:#fff; border-radius:2px;}
         .dvr-tl-playhead-time { position:absolute; top:-26px; left:50%; transform:translateX(-50%); font-size:.65rem; font-family:monospace; font-weight:800; color:#0f172a; background:#fff; padding:2px 6px; border-radius:4px; white-space:nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .dvr-tl-labels { position:absolute; bottom:0; left:0; right:0; display:flex; justify-content:space-between; padding:0 12px 6px; font-size:.6rem; font-weight: 600; font-family:monospace; color:#6b7280; pointer-events:none; }
+        .dvr-tl-labels { position:absolute; bottom:0; left:0; right:0; display:flex; justify-content:space-between; padding:0 12px 6px; font-size:.6rem; font-weight: 600; font-family:monospace; color:var(--text-muted); pointer-events:none; }
 
         .dvr-motion-list { margin-top:20px; }
-        .dvr-motion-list-title { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:#6b7280; margin:0 0 12px; }
+        .dvr-motion-list-title { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--text-muted); margin:0 0 12px; }
         .dvr-motion-events { display:grid; grid-template-columns:1fr; gap:10px; }
         @media(min-width:640px) { .dvr-motion-events { grid-template-columns:repeat(2,1fr); } }
         @media(min-width:1024px) { .dvr-motion-events { grid-template-columns:repeat(4,1fr); } }
         
-        .dvr-event-item { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; background:rgba(17,24,39,.6); border:1px solid rgba(255,255,255,.06); cursor:pointer; transition:all .2s; text-align:left; box-shadow: 0 4px 6px rgba(0,0,0,.15); }
+        .dvr-event-item { display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; background:var(--bg-subtle); border:1px solid var(--border-color); cursor:pointer; transition:all .2s; text-align:left; box-shadow: 0 4px 6px rgba(0,0,0,.15); }
         .dvr-event-item:hover { background:rgba(239,68,68,.1); border-color:rgba(239,68,68,.3); transform:translateY(-1px); box-shadow: 0 6px 12px rgba(239,68,68,.15); }
         .dvr-event-dot { width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px rgba(239,68,68,.8); flex-shrink:0; }
         .dvr-event-body { display:flex; flex-direction:column; gap:2px; overflow:hidden; flex:1; }
-        .dvr-event-time { font-size:.8rem; font-weight:800; font-family:monospace; color:#f3f4f6; }
-        .dvr-event-desc { font-size:.65rem; font-weight:500; color:#9ca3af; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .dvr-event-time { font-size:.8rem; font-weight:800; font-family:monospace; color:var(--text-main); }
+        .dvr-event-desc { font-size:.65rem; font-weight:500; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
         .dvr-event-play { width:14px; height:14px; color:#4b5563; flex-shrink:0; transition:color .2s; }
-        .dvr-event-item:hover .dvr-event-play { color:#fca5a5; }
+        .dvr-event-item:hover .dvr-event-play { color:var(--danger); }
 
         .custom-scrollbar::-webkit-scrollbar { width:4px; height:4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background:transparent; }
@@ -531,6 +570,63 @@
                 ctrlPlayBtn.addEventListener('click', togglePlay);
             }
         });
+
+        // DVR Button Functions
+        function updateDvrDate(dateVal) {
+            if (!dateVal) return;
+            const dateObj = new Date(dateVal);
+            const dateStr = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('dvr-date-text').textContent = dateStr;
+            
+            if (typeof FilamentNotification !== 'undefined') {
+                new FilamentNotification()
+                    .title('Memuat Arsip...')
+                    .body('Mengambil data rekaman untuk tanggal ' + dateStr)
+                    .info()
+                    .send();
+            }
+        }
+
+        function exportDvrVideo() {
+            if (typeof FilamentNotification !== 'undefined') {
+                new FilamentNotification()
+                    .title('Mengekspor Rekaman')
+                    .body('File MP4 sedang disiapkan untuk diunduh...')
+                    .warning()
+                    .send();
+                
+                setTimeout(() => {
+                    new FilamentNotification()
+                        .title('Ekspor Selesai')
+                        .body('Video berhasil diunduh.')
+                        .success()
+                        .send();
+                }, 2000);
+            }
+        }
+
+        function jumpToTimeline(percentage) {
+            const seekFill = document.getElementById('dvr-seek-fill');
+            const seekThumb = document.getElementById('dvr-seek-thumb');
+            
+            if (seekFill && seekThumb) {
+                const p = percentage + '%';
+                seekFill.style.transition = 'width 0.3s ease';
+                seekThumb.style.transition = 'left 0.3s ease';
+                
+                seekFill.style.width = p;
+                seekThumb.style.left = p;
+
+                if (typeof FilamentNotification !== 'undefined') {
+                    new FilamentNotification()
+                        .title('Melompat ke Kejadian')
+                        .body('Menyesuaikan timeline video...')
+                        .success()
+                        .send();
+                }
+            }
+        }
     </script>
 
+    </div>
 </x-filament-panels::page>

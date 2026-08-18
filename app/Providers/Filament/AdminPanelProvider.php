@@ -250,10 +250,13 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 \Filament\View\PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
                 fn (): string => Blade::render('
-                    <div style="text-align:center; margin-bottom: 0.5rem; margin-top: -1.5rem;">
-                        <h2 style="font-size: 1.25rem; font-weight: 800; color: #064e3b; letter-spacing: -0.01em;">Portal Karyawan Gunung Pancar</h2>
+                    <div style="text-align:center; margin-bottom: 0; margin-top: -1.5rem;">
+                        <div style="font-size: 0.75rem; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Sistem Informasi</div>
+                        <h2 style="font-size: 1.25rem; font-weight: 800; color: #064e3b; letter-spacing: -0.01em; line-height: 1; margin: 0; padding: 0;">
+                            Portal Karyawan Gunung Pancar
+                        </h2>
                     </div>
-                    <div style="width: 40px; height: 3px; background: #10b981; margin: 1rem auto; border-radius: 99px;"></div>
+                    <div style="width: 40px; height: 3px; background: #10b981; margin: 0 auto 1.5rem auto; border-radius: 99px;"></div>
                 ')
             )
             ->renderHook(

@@ -47,7 +47,7 @@
                     <button id="btn-list" class="layout-btn" title="List View"><x-filament::icon icon="heroicon-m-queue-list" /></button>
                     <button id="btn-large" class="layout-btn" title="Grid 1x2"><x-filament::icon icon="heroicon-m-rectangle-group" /></button>
                 </div>
-                <button class="filter-btn" onclick="promptFilterArea()">
+                <button class="filter-btn" x-data x-on:click="$dispatch('open-modal', { id: 'filter-area-modal' })">
                     <x-filament::icon icon="heroicon-m-funnel" />
                     <span>Filter Area</span>
                 </button>
@@ -196,6 +196,30 @@
 
     </div>
 
+    <!-- Modals -->
+    <x-filament::modal id="filter-area-modal" width="md">
+        <x-slot name="heading">
+            Pencarian Area / Kamera
+        </x-slot>
+        <x-slot name="description">
+            Masukkan lokasi atau nama kamera (misal: Gerbang) untuk memfilter tampilan.
+        </x-slot>
+
+        <input type="text" id="custom-filter-input" placeholder="Ketik lokasi..." class="w-full rounded-lg border-none bg-gray-100 py-2.5 px-3 text-base text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 sm:text-sm dark:bg-white/5 dark:text-white dark:placeholder:text-gray-500 ring-1 ring-inset ring-gray-950/10 dark:ring-white/20" onkeypress="if(event.key === 'Enter') applyCustomFilter()" />
+        
+        <x-slot name="footerActions">
+            <x-filament::button onclick="applyCustomFilter()">
+                Terapkan Filter
+            </x-filament::button>
+            <x-filament::button color="gray" x-on:click="close()">
+                Tutup
+            </x-filament::button>
+            <x-filament::button color="danger" onclick="resetCustomFilter()">
+                Reset
+            </x-filament::button>
+        </x-slot>
+    </x-filament::modal>
+
     <style>
         /* BASE THEME & VARIABLES */
         .cctv-dashboard-wrapper {
@@ -328,10 +352,18 @@
 
         .layout-btn svg { width: 1.25rem; height: 1.25rem; }
         
-        .layout-btn:hover, .layout-btn.active {
+        .layout-btn.active {
             background: var(--cc-primary);
             color: #fff;
             box-shadow: 0 0 10px var(--cc-primary-glow);
+        }
+        
+        @media (hover: hover) {
+            .layout-btn:hover {
+                background: var(--cc-primary);
+                color: #fff;
+                box-shadow: 0 0 10px var(--cc-primary-glow);
+            }
         }
 
         .filter-btn {
@@ -360,7 +392,7 @@
         /* METRICS SUMMARY BAR */
         .metrics-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
         }
 
@@ -505,7 +537,11 @@
         /* Layout Overrides */
         .cctv-grid.list-view { grid-template-columns: 1fr !important; }
         .cctv-grid.large-view { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-        @media (max-width: 768px) { .cctv-grid.large-view { grid-template-columns: 1fr !important; } }
+        .cctv-grid.force-grid-mobile { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+        
+        @media (max-width: 768px) { 
+            .cctv-grid.large-view { grid-template-columns: 1fr !important; } 
+        }
 
         .cctv-card {
             background: #000;
@@ -564,59 +600,65 @@
             z-index: 2;
         }
 
-        .osd-top-left { position: absolute; top: 1rem; left: 1rem; z-index: 10; display: flex; gap: 0.5rem; align-items: center; }
-        .osd-top-right { position: absolute; top: 1rem; right: 1rem; z-index: 10; }
-        .osd-bottom-left { position: absolute; bottom: 1rem; left: 1rem; z-index: 10; display: flex; flex-direction: column; gap: 0.25rem; }
-        .osd-bottom-right { position: absolute; bottom: 1rem; right: 1rem; z-index: 10; text-align: right; }
+        .osd-top-left { position: absolute; top: 0.75rem; left: 0.75rem; z-index: 10; display: flex; gap: 0.4rem; align-items: flex-start; flex-wrap: wrap; max-width: 70%; }
+        .osd-top-right { position: absolute; top: 0.75rem; right: 0.75rem; z-index: 10; }
+        .osd-bottom-left { position: absolute; bottom: 0.75rem; left: 0.75rem; z-index: 10; display: flex; flex-direction: column; gap: 0.25rem; max-width: 55%; }
+        .osd-bottom-right { position: absolute; bottom: 0.75rem; right: 0.75rem; z-index: 10; text-align: right; max-width: 45%; }
 
         .osd-badge {
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
-            padding: 0.25rem 0.6rem;
+            padding: 0.2rem 0.4rem;
             border-radius: 0.25rem;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 700;
             color: #fff;
             font-family: monospace;
             border: 1px solid rgba(255, 255, 255, 0.2);
             text-transform: uppercase;
         }
+        .osd-badge.cam-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
         .osd-badge.cam-id { background: rgba(16, 185, 129, 0.2); border-color: rgba(16, 185, 129, 0.5); color: #34d399; }
 
         .rec-indicator {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.3rem;
             background: rgba(0, 0, 0, 0.6);
-            padding: 0.25rem 0.6rem;
+            padding: 0.2rem 0.4rem;
             border-radius: 0.25rem;
             font-family: monospace;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: #ef4444;
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
-        .rec-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; box-shadow: 0 0 8px #ef4444; animation: blink 1s step-end infinite; }
+        .rec-dot { width: 6px; height: 6px; background: #ef4444; border-radius: 50%; box-shadow: 0 0 8px #ef4444; animation: blink 1s step-end infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
         .osd-info-row {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.3rem;
             color: #f3f4f6;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 600;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
             background: rgba(0,0,0,0.4);
-            padding: 0.2rem 0.5rem;
+            padding: 0.15rem 0.4rem;
             border-radius: 0.25rem;
             width: fit-content;
         }
         .osd-info-row.text-primary { color: #34d399; }
-        .osd-icon { width: 12px; height: 12px; }
+        .osd-icon { width: 10px; height: 10px; flex-shrink: 0; }
 
-        .osd-timestamp { font-family: monospace; font-size: 1.25rem; font-weight: 800; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 0.05em; }
-        .osd-date { font-family: monospace; font-size: 0.75rem; font-weight: 600; color: #d1d5db; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+        .osd-timestamp { font-family: monospace; font-size: 1rem; font-weight: 800; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); letter-spacing: 0.05em; line-height: 1.1; }
+        .osd-date { font-family: monospace; font-size: 0.65rem; font-weight: 600; color: #d1d5db; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
 
         .cctv-action-overlay {
             position: absolute;
@@ -695,6 +737,37 @@
         }
         .reload-btn:hover { border-color: var(--cc-primary); color: var(--cc-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
+        /* ── RESPONSIVE MOBILE FIXES ── */
+        @media (max-width: 640px) {
+            /* Header Fixes */
+            .dashboard-header { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1rem; }
+            .header-content { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .header-icon-wrapper { flex-direction: row; }
+            .header-text h2 { font-size: 1.25rem; }
+            .header-text p { font-size: 0.75rem; }
+            .header-actions { width: 100%; justify-content: space-between; }
+            
+            /* Alert Banner Fixes */
+            .critical-alert-banner { flex-direction: column; gap: 0.5rem; padding: 1rem; }
+            .alert-title { font-size: 0.85rem; line-height: 1.4; margin-top: 0.5rem; }
+            .alert-close-btn { position: absolute; top: 0.5rem; right: 0.5rem; }
+            
+            /* Metric Cards */
+            .metrics-container { grid-template-columns: 1fr 1fr; }
+            .metric-card { flex-direction: column; align-items: center; text-align: center; padding: 1rem 0.5rem; gap: 0.5rem; }
+            .metric-info { align-items: center; }
+            .metric-value { font-size: 1.25rem; }
+            
+            /* OSD Scaling on Mobile */
+            .osd-badge { padding: 0.15rem 0.4rem; font-size: 0.6rem; }
+            .osd-timestamp { font-size: 0.9rem; }
+            .osd-date { font-size: 0.6rem; }
+            .osd-info-row { font-size: 0.65rem; }
+            .osd-icon { width: 10px; height: 10px; }
+            .action-btn { width: 2.5rem; height: 2.5rem; }
+            .action-btn svg { width: 1.2rem; height: 1.2rem; }
+        }
+
     </style>
 
     <script>
@@ -729,11 +802,11 @@
                 btnGrid.classList.remove('active');
                 btnList.classList.remove('active');
                 btnLarge.classList.remove('active');
-                gridContainer.classList.remove('list-view', 'large-view');
+                gridContainer.classList.remove('list-view', 'large-view', 'force-grid-mobile');
             }
 
             if (btnGrid) {
-                btnGrid.addEventListener('click', () => { resetButtons(); btnGrid.classList.add('active'); });
+                btnGrid.addEventListener('click', () => { resetButtons(); btnGrid.classList.add('active'); gridContainer.classList.add('force-grid-mobile'); });
             }
             if (btnList) {
                 btnList.addEventListener('click', () => { resetButtons(); btnList.classList.add('active'); gridContainer.classList.add('list-view'); });
@@ -743,11 +816,9 @@
             }
         });
 
-        // Filter Logic
-        function promptFilterArea() {
-            const area = prompt("Masukkan lokasi/nama kamera (misal: Gerbang):");
-            if (area === null) return;
-            const term = area.toLowerCase();
+        function applyCustomFilter() {
+            const input = document.getElementById('custom-filter-input');
+            const term = input.value.toLowerCase();
             const cards = document.querySelectorAll('.cctv-card');
             let found = 0;
             
@@ -761,13 +832,21 @@
                 }
             });
 
+            // Close modal using Alpine dispatch
+            window.dispatchEvent(new CustomEvent('close-modal', { detail: { id: 'filter-area-modal' } }));
+
             if (typeof FilamentNotification !== 'undefined') {
                 new FilamentNotification()
-                    .title('Filter Diterapkan')
-                    .body(`Menemukan ${found} kamera untuk pencarian "${area}"`)
+                    .title(term === '' ? 'Filter Dihapus' : 'Filter Diterapkan')
+                    .body(term === '' ? 'Menampilkan semua kamera' : `Menemukan ${found} kamera untuk pencarian "${input.value}"`)
                     .success()
                     .send();
             }
+        }
+
+        function resetCustomFilter() {
+            document.getElementById('custom-filter-input').value = '';
+            applyCustomFilter();
         }
 
         // Actions

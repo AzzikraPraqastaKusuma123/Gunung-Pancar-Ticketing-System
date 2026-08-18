@@ -463,18 +463,23 @@ class AdminPanelProvider extends PanelProvider
                             height: 14px;
                         }
                     </style>
-                    <a href="{{ $editUrl }}" class="sb-user-card" x-data="{}" x-bind:style="$store.sidebar.isOpen ? \'\' : \'padding: 0.5rem; justify-content: center; background: transparent; border-color: transparent;\'">
-                        <div class="sb-user-avatar">{{ $initial }}</div>
-                        <div class="sb-user-info" x-show="$store.sidebar.isOpen" style="display: none;" x-transition.opacity>
-                            <div class="sb-user-name">{{ $name }}</div>
-                            <div class="sb-user-role">{{ $roleLabel }}</div>
-                        </div>
-                        <span class="sb-user-icon" x-show="$store.sidebar.isOpen" style="display: none;" x-transition.opacity>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                            </svg>
-                        </span>
-                    </a>
+                    <div class="sb-user-card" x-data="{}" x-bind:style="$store.sidebar.isOpen ? \'\' : \'padding: 0.5rem; justify-content: center; background: transparent; border-color: transparent;\'">
+                        <a href="{{ $editUrl }}" style="display: flex; align-items: center; gap: 0.65rem; flex: 1; min-width: 0; text-decoration: none;">
+                            <div class="sb-user-avatar">{{ $initial }}</div>
+                            <div class="sb-user-info" x-show="$store.sidebar.isOpen" style="display: none;" x-transition.opacity>
+                                <div class="sb-user-name">{{ $name }}</div>
+                                <div class="sb-user-role">{{ $roleLabel }}</div>
+                            </div>
+                        </a>
+                        <form action="{{ route(\'filament.admin.auth.logout\') }}" method="post" class="sb-user-icon" x-show="$store.sidebar.isOpen" style="display: none; margin: 0;" x-transition.opacity>
+                            @csrf
+                            <button type="submit" style="background: transparent; border: none; cursor: pointer; padding: 0.25rem; display: flex; align-items: center; justify-content: center; color: inherit; transition: color 0.2s;" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'inherit\'" title="Logout">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                     @endauth
                 ')
             );
